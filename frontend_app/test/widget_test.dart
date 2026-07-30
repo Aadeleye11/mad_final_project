@@ -1,31 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:frontend_app/data/repositories/preferences_repository.dart';
 import 'package:frontend_app/main.dart';
+
+Future<MyApp> buildApp({Map<String, Object> prefs = const {}}) async {
+  SharedPreferences.setMockInitialValues(prefs);
+  final sharedPrefs = await SharedPreferences.getInstance();
+  return MyApp(preferencesRepository: PreferencesRepository(sharedPrefs));
+}
+
+Future<void> pumpToLogin(WidgetTester tester, MyApp app) async {
+  await tester.pumpWidget(app);
+  await tester.pump(const Duration(seconds: 3));
+  await tester.pumpAndSettle();
+}
+
+Future<void> login(WidgetTester tester) async {
+  await tester.enterText(
+    find.byType(TextFormField).first,
+    'emeka@example.com',
+  );
+  await tester.enterText(find.byType(TextFormField).last, 'secret123');
+  await tester.tap(find.text('Log in'));
+  // Mock repository resolves after 1.2s.
+  await tester.pump(const Duration(seconds: 2));
+  await tester.pumpAndSettle();
+}
 
 void main() {
   testWidgets('Splash shows branding then navigates to login',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-
-    expect(find.text('RwandaGo'), findsOneWidget);
-    expect(
-      find.text('Your offline-first Rwanda travel companion'),
-      findsOneWidget,
-    );
-
-    // Let the splash timer fire and the navigation settle.
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pumpAndSettle();
+    await pumpToLogin(tester, await buildApp());
 
     expect(find.text('Welcome back'), findsOneWidget);
     expect(find.text('Log in'), findsOneWidget);
   });
 
   testWidgets('Login validates empty fields', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pumpAndSettle();
+    await pumpToLogin(tester, await buildApp());
 
     await tester.tap(find.text('Log in'));
     await tester.pumpAndSettle();
@@ -34,30 +48,72 @@ void main() {
     expect(find.text('Password is required'), findsOneWidget);
   });
 
-  testWidgets('Successful login reaches home', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pumpAndSettle();
+  testWidgets('First login goes to interest selection, then home',
+      (WidgetTester tester) async {
+    await pumpToLogin(tester, await buildApp());
+    await login(tester);
 
-    await tester.enterText(
-      find.byType(TextFormField).first,
-      'emeka@example.com',
+    expect(find.text('What are you into?'), findsOneWidget);
+
+    // Button disabled until a selection is made.
+    final button = tester.widget<ElevatedButton>(
+      find.widgetWithText(ElevatedButton, 'Generate my itinerary'),
     );
-    await tester.enterText(find.byType(TextFormField).last, 'secret123');
-    await tester.tap(find.text('Log in'));
+    expect(button.onPressed, isNull);
 
-    // Mock repository resolves after 1.2s.
-    await tester.pump(const Duration(seconds: 2));
+    await tester.tap(find.text('Gorillas & Wildlife'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Generate my itinerary'));
     await tester.pumpAndSettle();
 
     expect(find.text('Good morning, emeka'), findsOneWidget);
   });
 
+  testWidgets('Returning user skips interest selection',
+      (WidgetTester tester) async {
+    await pumpToLogin(
+      tester,
+      await buildApp(prefs: {
+        'interests_completed_emeka@example.com': true,
+        'interests_emeka@example.com': ['History'],
+      }),
+    );
+    await login(tester);
+
+    expect(find.text('Good morning, emeka'), findsOneWidget);
+    expect(find.text('What are you into?'), findsNothing);
+  });
+
+  testWidgets('Interests are editable from home in settings mode',
+      (WidgetTester tester) async {
+    await pumpToLogin(
+      tester,
+      await buildApp(prefs: {
+        'interests_completed_emeka@example.com': true,
+        'interests_emeka@example.com': ['History'],
+      }),
+    );
+    await login(tester);
+
+    await tester.tap(find.text('Edit interests'));
+    await tester.pumpAndSettle();
+
+    // Settings mode: previously saved chip is selected, save button shown.
+    expect(find.text('My Interests'), findsOneWidget);
+    expect(find.text('Save interests'), findsOneWidget);
+
+    await tester.tap(find.text('Lakes & Nature'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save interests'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Interests updated'), findsOneWidget);
+    expect(find.text('Good morning, emeka'), findsOneWidget);
+  });
+
   testWidgets('Sign up link opens signup screen and validates passwords match',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pumpAndSettle();
+    await pumpToLogin(tester, await buildApp());
 
     await tester.tap(find.text('Sign up'));
     await tester.pumpAndSettle();
@@ -75,10 +131,9 @@ void main() {
     expect(find.text('Passwords do not match'), findsOneWidget);
   });
 
-  testWidgets('Successful signup reaches home', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pumpAndSettle();
+  testWidgets('Successful signup goes to interest selection',
+      (WidgetTester tester) async {
+    await pumpToLogin(tester, await buildApp());
 
     await tester.tap(find.text('Sign up'));
     await tester.pumpAndSettle();
@@ -89,11 +144,9 @@ void main() {
     await tester.enterText(fields.at(2), 'secret123');
     await tester.enterText(fields.at(3), 'secret123');
     await tester.tap(find.text('Create account'));
-
-    // Mock repository resolves after 1.2s.
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
 
-    expect(find.text('Good morning, Emeka Daniels'), findsOneWidget);
+    expect(find.text('What are you into?'), findsOneWidget);
   });
 }

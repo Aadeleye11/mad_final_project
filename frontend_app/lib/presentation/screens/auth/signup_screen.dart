@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../data/repositories/preferences_repository.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -49,7 +50,13 @@ class _SignupScreenState extends State<SignupScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.authenticated) {
-            Navigator.of(context).pushReplacementNamed('/home');
+            // New accounts always pick interests first, but check anyway
+            // in case this email selected them on this device before.
+            final isFirstTime = !context
+                .read<PreferencesRepository>()
+                .hasSelectedInterests(state.user!.email);
+            Navigator.of(context)
+                .pushReplacementNamed(isFirstTime ? '/interests' : '/home');
           } else if (state.status == AuthStatus.failure) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()

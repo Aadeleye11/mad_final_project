@@ -25,15 +25,27 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.explore_outlined, size: 64, color: AppColors.primary),
-            SizedBox(height: 16),
-            Text(
+            const Icon(
+              Icons.explore_outlined,
+              size: 64,
+              color: AppColors.primary,
+            ),
+            const SizedBox(height: 16),
+            const Text(
               'Home dashboard coming soon',
               style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            // Temporary entry point; will move to the Profile tab.
+            OutlinedButton.icon(
+              icon: const Icon(Icons.tune),
+              label: const Text('Edit interests'),
+              onPressed: () => Navigator.of(context)
+                  .pushNamed('/interests', arguments: true),
             ),
           ],
         ),
