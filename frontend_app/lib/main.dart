@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/theme/app_theme.dart';
-import 'logic/blocs/counter/counter_bloc.dart';
-import 'presentation/screens/counter_screen.dart';
+import 'logic/blocs/auth/auth_bloc.dart';
+import 'data/repositories/auth_repository.dart';
+import 'presentation/screens/splash_screen.dart';
+import 'presentation/screens/home/home_screen.dart';
+import 'presentation/screens/auth/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,13 +17,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => CounterBloc())],
-      child: MaterialApp(
-        title: 'Rwanda Go',
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        home: const CounterScreen(),
+    return RepositoryProvider(
+      create: (_) => AuthRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(context.read<AuthRepository>()),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Rwanda Go',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          initialRoute: '/',
+          routes: {
+            '/': (_) => const SplashScreen(),
+            '/login': (_) => const LoginScreen(),
+            '/home': (_) => const HomeScreen(),
+          },
+        ),
       ),
     );
   }
