@@ -66,7 +66,10 @@ void main() {
     await tester.tap(find.text('Generate my itinerary'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Good morning, emeka'), findsOneWidget);
+    // Home dashboard: time-based greeting + trip summary card.
+    expect(find.textContaining(', emeka'), findsOneWidget);
+    expect(find.text('Your Trip Summary'), findsOneWidget);
+    expect(find.text('Featured Spots'), findsOneWidget);
   });
 
   testWidgets('Returning user skips interest selection',
@@ -80,11 +83,11 @@ void main() {
     );
     await login(tester);
 
-    expect(find.text('Good morning, emeka'), findsOneWidget);
+    expect(find.textContaining(', emeka'), findsOneWidget);
     expect(find.text('What are you into?'), findsNothing);
   });
 
-  testWidgets('Interests are editable from home in settings mode',
+  testWidgets('Interests are editable from the Profile tab in settings mode',
       (WidgetTester tester) async {
     await pumpToLogin(
       tester,
@@ -95,11 +98,12 @@ void main() {
     );
     await login(tester);
 
-    await tester.tap(find.text('Edit interests'));
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('My Interests'));
     await tester.pumpAndSettle();
 
-    // Settings mode: previously saved chip is selected, save button shown.
-    expect(find.text('My Interests'), findsOneWidget);
+    // Settings mode: save button shown instead of generate.
     expect(find.text('Save interests'), findsOneWidget);
 
     await tester.tap(find.text('Lakes & Nature'));
@@ -108,7 +112,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Interests updated'), findsOneWidget);
-    expect(find.text('Good morning, emeka'), findsOneWidget);
+    expect(find.text('Logout'), findsOneWidget);
   });
 
   testWidgets('Sign up link opens signup screen and validates passwords match',
