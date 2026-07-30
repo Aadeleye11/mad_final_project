@@ -9,6 +9,36 @@ class SpotCard extends StatelessWidget {
 
   const SpotCard({super.key, required this.attraction, this.onTap});
 
+  /// Bundled photo with a gradient + category icon fallback for
+  /// spots that don't have an image yet.
+  static Widget spotImage(Attraction attraction, {double iconSize = 40}) {
+    final fallback = Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primaryLight, AppColors.primary],
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          categoryIcon(attraction.category),
+          size: iconSize,
+          color: Colors.white70,
+        ),
+      ),
+    );
+
+    if (attraction.imageAsset.isEmpty) return fallback;
+    return Image.asset(
+      attraction.imageAsset,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      errorBuilder: (_, _, _) => fallback,
+    );
+  }
+
   static IconData categoryIcon(String category) {
     switch (category) {
       case 'Gorillas & Wildlife':
@@ -43,24 +73,9 @@ class SpotCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image placeholder until real photos are bundled as assets
-              // (offline-first: avoid depending on network images).
               AspectRatio(
                 aspectRatio: 16 / 10,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppColors.primaryLight, AppColors.primary],
-                    ),
-                  ),
-                  child: Icon(
-                    categoryIcon(attraction.category),
-                    size: 40,
-                    color: Colors.white70,
-                  ),
-                ),
+                child: spotImage(attraction),
               ),
               Padding(
                 padding: const EdgeInsets.all(10),

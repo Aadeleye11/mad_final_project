@@ -14,6 +14,7 @@ import 'data/repositories/itinerary_repository.dart';
 import 'presentation/screens/auth/signup_screen.dart';
 import 'data/repositories/attractions_repository.dart';
 import 'data/repositories/preferences_repository.dart';
+import 'presentation/screens/discover/attraction_detail_screen.dart';
 import 'presentation/screens/onboarding/interest_selection_screen.dart';
 
 Future<void> main() async {
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
             '/login': (_) => const LoginScreen(),
             '/signup': (_) => const SignupScreen(),
             '/interests': (_) => const InterestSelectionScreen(),
+            '/spot': (_) => const AttractionDetailScreen(),
           },
         ),
       ),

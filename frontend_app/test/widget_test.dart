@@ -115,6 +115,32 @@ void main() {
     expect(find.text('Logout'), findsOneWidget);
   });
 
+  testWidgets('Tapping a featured spot opens its detail page',
+      (WidgetTester tester) async {
+    await pumpToLogin(
+      tester,
+      await buildApp(prefs: {
+        'interests_completed_emeka@example.com': true,
+        'interests_emeka@example.com': ['History'],
+      }),
+    );
+    await login(tester);
+
+    await tester.tap(find.text('Kigali Genocide Memorial'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Kigali Genocide Memorial'), findsOneWidget);
+    expect(find.text('About'), findsOneWidget);
+    expect(find.text('Best time'), findsOneWidget);
+    expect(find.text('Entry fee'), findsOneWidget);
+    expect(find.text('Add to My Plan'), findsOneWidget);
+
+    // Back returns to the home dashboard.
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.text('Featured Spots'), findsOneWidget);
+  });
+
   testWidgets('Sign up link opens signup screen and validates passwords match',
       (WidgetTester tester) async {
     await pumpToLogin(tester, await buildApp());

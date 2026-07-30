@@ -132,7 +132,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     separatorBuilder: (_, _) => const SizedBox(width: 12),
                     itemBuilder: (context, index) => SpotCard(
                       attraction: state.featuredSpots[index],
-                      onTap: () => widget.onNavigateToTab(2),
+                      onTap: () => Navigator.of(context).pushNamed(
+                        '/spot',
+                        arguments: state.featuredSpots[index],
+                      ),
                     ),
                   ),
                 )
