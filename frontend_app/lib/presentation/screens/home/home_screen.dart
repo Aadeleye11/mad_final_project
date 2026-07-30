@@ -107,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     onViewPlan: () => widget.onNavigateToTab(1),
                     onDiscover: () => widget.onNavigateToTab(2),
                     onBuild: () => _comingSoon('Build a plan'),
-                    onQrCode: () => _comingSoon('QR code'),
+                    onQrCode: () =>
+                        Navigator.of(context).pushNamed('/qr'),
                   ),
                 ),
               ),

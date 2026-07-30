@@ -34,16 +34,7 @@ class _PlanScreenState extends State<PlanScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         shape: const CircleBorder(),
-        onPressed: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text('Offline QR code coming soon'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-        },
+        onPressed: () => Navigator.of(context).pushNamed('/qr'),
         child: const Icon(Icons.qr_code_2, color: Colors.white),
       ),
       body: BlocBuilder<PlanBloc, PlanState>(

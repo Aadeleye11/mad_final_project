@@ -4,17 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
 import 'logic/blocs/auth/auth_bloc.dart';
+import 'logic/blocs/plan/plan_bloc.dart';
 import 'logic/blocs/home/home_bloc.dart';
 import 'presentation/screens/main_shell.dart';
 import 'data/repositories/auth_repository.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'logic/blocs/interests/interests_bloc.dart';
-import 'logic/blocs/plan/plan_bloc.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'data/repositories/itinerary_repository.dart';
 import 'presentation/screens/auth/signup_screen.dart';
 import 'data/repositories/attractions_repository.dart';
 import 'data/repositories/preferences_repository.dart';
+import 'presentation/screens/plan/qr_code_screen.dart';
 import 'presentation/screens/discover/attraction_detail_screen.dart';
 import 'presentation/screens/onboarding/interest_selection_screen.dart';
 
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
             '/signup': (_) => const SignupScreen(),
             '/interests': (_) => const InterestSelectionScreen(),
             '/spot': (_) => const AttractionDetailScreen(),
+            '/qr': (_) => const QrCodeScreen(),
           },
         ),
       ),

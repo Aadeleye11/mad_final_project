@@ -145,6 +145,28 @@ void main() {
     expect(find.text('Kigali Genocide Memorial'), findsNothing);
   });
 
+  testWidgets('QR screen shows the offline itinerary code',
+      (WidgetTester tester) async {
+    await pumpToLogin(
+      tester,
+      await buildApp(prefs: {
+        'interests_completed_emeka@example.com': true,
+        'interests_emeka@example.com': ['History'],
+      }),
+    );
+    await login(tester);
+
+    await tester.tap(find.text('Plan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Your Offline Itinerary'), findsOneWidget);
+    expect(find.text('Scan this code to share your trip'), findsOneWidget);
+    expect(find.text('No internet required'), findsOneWidget);
+    expect(find.text('Share Itinerary'), findsOneWidget);
+  });
+
   testWidgets('Tapping a featured spot opens its detail page',
       (WidgetTester tester) async {
     await pumpToLogin(
