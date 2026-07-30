@@ -4,23 +4,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -28,7 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(
-            AuthLoginRequested(
+            AuthSignupRequested(
+              name: _nameController.text.trim(),
               email: _emailController.text.trim(),
               password: _passwordController.text,
             ),
@@ -49,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.errorMessage ?? 'Login failed'),
+                  content: Text(state.errorMessage ?? 'Sign up failed'),
                   backgroundColor: AppColors.error,
                   behavior: SnackBarBehavior.floating,
                 ),
@@ -86,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 24),
                       const Text(
-                        'Welcome back',
+                        'Create your account',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 26,
@@ -96,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Log in to plan your Rwanda experience',
+                        'Start planning your Rwanda experience',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -104,6 +110,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
+                      TextFormField(
+                        controller: _nameController,
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        textInputAction: TextInputAction.next,
+                        enabled: !isLoading,
+                        decoration: const InputDecoration(
+                          labelText: 'Full name',
+                          hintText: 'Emeka Daniels',
+                          prefixIcon: Icon(Icons.person_outline),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Name is required';
+                          }
+                          if (value.trim().length < 2) {
+                            return 'Enter your full name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -131,9 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: _obscurePassword,
-                        textInputAction: TextInputAction.done,
+                        textInputAction: TextInputAction.next,
                         enabled: !isLoading,
-                        onFieldSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
                           labelText: 'Password',
                           prefixIcon: const Icon(Icons.lock_outline),
@@ -158,15 +185,39 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: isLoading ? null : () {},
-                          child: const Text('Forgot password?'),
-                        ),
-                      ),
                       const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        obscureText: _obscureConfirmPassword,
+                        textInputAction: TextInputAction.done,
+                        enabled: !isLoading,
+                        onFieldSubmitted: (_) => _submit(),
+                        decoration: InputDecoration(
+                          labelText: 'Confirm password',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirmPassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                            onPressed: () => setState(
+                              () => _obscureConfirmPassword =
+                                  !_obscureConfirmPassword,
+                            ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
                       ElevatedButton(
                         onPressed: isLoading ? null : _submit,
                         child: isLoading
@@ -178,22 +229,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text('Log in'),
+                            : const Text('Create account'),
                       ),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Don't have an account?",
+                            'Already have an account?',
                             style: TextStyle(color: AppColors.textSecondary),
                           ),
                           TextButton(
                             onPressed: isLoading
                                 ? null
                                 : () => Navigator.of(context)
-                                    .pushReplacementNamed('/signup'),
-                            child: const Text('Sign up'),
+                                    .pushReplacementNamed('/login'),
+                            child: const Text('Log in'),
                           ),
                         ],
                       ),

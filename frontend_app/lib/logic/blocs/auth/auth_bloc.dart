@@ -12,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this._authRepository) : super(const AuthState()) {
     on<AuthLoginRequested>(_onLoginRequested);
+    on<AuthSignupRequested>(_onSignupRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
   }
 
@@ -22,6 +23,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
       final user = await _authRepository.login(
+        email: event.email,
+        password: event.password,
+      );
+      emit(state.copyWith(status: AuthStatus.authenticated, user: user));
+    } on AuthException catch (e) {
+      emit(state.copyWith(status: AuthStatus.failure, errorMessage: e.message));
+    } catch (_) {
+      emit(state.copyWith(
+        status: AuthStatus.failure,
+        errorMessage: 'Something went wrong. Please try again.',
+      ));
+    }
+  }
+
+  Future<void> _onSignupRequested(
+    AuthSignupRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: AuthStatus.loading));
+    try {
+      final user = await _authRepository.signup(
+        name: event.name,
         email: event.email,
         password: event.password,
       );

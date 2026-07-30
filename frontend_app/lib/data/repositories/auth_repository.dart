@@ -23,6 +23,22 @@ class AuthRepository {
     return _currentUser!;
   }
 
+  Future<User> signup({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 1200));
+
+    // Mock rule: pretend this email is already registered.
+    if (email.toLowerCase() == 'taken@example.com') {
+      throw AuthException('An account with this email already exists.');
+    }
+
+    _currentUser = User(id: 'u_1', name: name, email: email);
+    return _currentUser!;
+  }
+
   Future<void> logout() async {
     _currentUser = null;
   }

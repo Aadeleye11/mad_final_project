@@ -7,6 +7,7 @@ import 'data/repositories/auth_repository.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'presentation/screens/home/home_screen.dart';
 import 'presentation/screens/auth/login_screen.dart';
+import 'presentation/screens/auth/signup_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (_) => const SplashScreen(),
             '/login': (_) => const LoginScreen(),
+            '/signup': (_) => const SignupScreen(),
             '/home': (_) => const HomeScreen(),
           },
         ),
