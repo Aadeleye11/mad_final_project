@@ -9,6 +9,7 @@ import 'presentation/screens/main_shell.dart';
 import 'data/repositories/auth_repository.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'logic/blocs/interests/interests_bloc.dart';
+import 'logic/blocs/plan/plan_bloc.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'data/repositories/itinerary_repository.dart';
 import 'presentation/screens/auth/signup_screen.dart';
@@ -51,6 +52,9 @@ class MyApp extends StatelessWidget {
               context.read<AttractionsRepository>(),
               context.read<ItineraryRepository>(),
             ),
+          ),
+          BlocProvider(
+            create: (context) => PlanBloc(context.read<ItineraryRepository>()),
           ),
         ],
         child: MaterialApp(

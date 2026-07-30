@@ -115,6 +115,36 @@ void main() {
     expect(find.text('Logout'), findsOneWidget);
   });
 
+  testWidgets('Plan tab shows the day timeline and switches days',
+      (WidgetTester tester) async {
+    await pumpToLogin(
+      tester,
+      await buildApp(prefs: {
+        'interests_completed_emeka@example.com': true,
+        'interests_emeka@example.com': ['History'],
+      }),
+    );
+    await login(tester);
+
+    await tester.tap(find.text('Plan'));
+    await tester.pumpAndSettle();
+
+    // Day 1 selected by default with its timeline.
+    expect(find.text('Day 1'), findsOneWidget);
+    expect(find.text('Day 4'), findsOneWidget);
+    expect(find.text('Arrival & Kigali Exploration'), findsOneWidget);
+    expect(find.text('Kigali Genocide Memorial'), findsOneWidget);
+    expect(find.text('9:00 AM'), findsOneWidget);
+    expect(find.text('History'), findsOneWidget);
+
+    await tester.tap(find.text('Day 2'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Volcanoes National Park'), findsOneWidget);
+    expect(find.text('Gorilla Trekking'), findsOneWidget);
+    expect(find.text('Kigali Genocide Memorial'), findsNothing);
+  });
+
   testWidgets('Tapping a featured spot opens its detail page',
       (WidgetTester tester) async {
     await pumpToLogin(
