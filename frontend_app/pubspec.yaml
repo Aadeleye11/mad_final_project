@@ -45,18 +45,21 @@ dependencies:
   share_plus: ^13.3.0
   gal: ^2.3.3
 
-  # Profile feature (Ayomide)
-  image_picker: ^1.1.2
-  path_provider: ^2.1.4
-
   # Discover feature (Ayomide)
   bloc: ^9.0.0
   get_it: ^7.7.0
   dartz: ^0.10.1
   firebase_core: ^3.6.0
+  firebase_auth: ^5.7.0
   cloud_firestore: ^5.4.4
   cached_network_image: ^3.4.1
-  url_launcher: ^6.3.1
+  mobile_scanner: ^7.4.0
+  connectivity_plus: ^7.3.1
+  provider: ^6.1.5+1
+  intl: ^0.20.3
+  image_picker: ^1.2.3
+  path_provider: ^2.1.6
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

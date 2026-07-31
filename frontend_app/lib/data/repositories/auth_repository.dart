@@ -1,21 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+
 import '../models/user.dart';
 
-/// Mock; swap for real API calls via an AuthProvider once a backend exists.
 class AuthRepository {
-  User? _currentUser;
+  final fb_auth.FirebaseAuth _firebaseAuth = fb_auth.FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  User? get currentUser => _currentUser;
+  User? get currentUser {
+    final fbUser = _firebaseAuth.currentUser;
+    if (fbUser == null) return null;
+    return User(
+      uid: fbUser.uid,
+      name: fbUser.displayName ?? '',
+      email: fbUser.email ?? '',
+      defaultInterests: const [],
+    );
+  }
 
   Future<User> login({required String email, required String password}) async {
-    await Future.delayed(const Duration(milliseconds: 1200));
+    try {
+      final cred = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    // Mock rule: any syntactically valid credentials succeed.
-    if (password.length < 6) {
-      throw AuthException('Invalid email or password.');
+      final doc =
+          await _firestore.collection('users').doc(cred.user!.uid).get();
+      if (doc.exists) {
+        return User.fromFirestore(doc);
+      }
+
+      return User(
+        uid: cred.user!.uid,
+        name: cred.user!.displayName ?? email.split('@').first,
+        email: email,
+        defaultInterests: const [],
+      );
+    } on fb_auth.FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? 'Authentication failed.');
     }
-
-    _currentUser = User(id: 'u_1', name: email.split('@').first, email: email);
-    return _currentUser!;
   }
 
   Future<User> signup({
@@ -23,19 +47,32 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 1200));
+    try {
+      final cred = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    // Mock rule: pretend this email is already registered.
-    if (email.toLowerCase() == 'taken@example.com') {
-      throw AuthException('An account with this email already exists.');
+      final newUser = User(
+        uid: cred.user!.uid,
+        name: name,
+        email: email,
+        defaultInterests: const [],
+      );
+
+      await _firestore
+          .collection('users')
+          .doc(cred.user!.uid)
+          .set(newUser.toMap());
+
+      return newUser;
+    } on fb_auth.FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? 'Registration failed.');
     }
-
-    _currentUser = User(id: 'u_1', name: name, email: email);
-    return _currentUser!;
   }
 
   Future<void> logout() async {
-    _currentUser = null;
+    await _firebaseAuth.signOut();
   }
 }
 

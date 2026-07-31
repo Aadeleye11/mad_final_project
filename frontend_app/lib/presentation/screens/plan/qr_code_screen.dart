@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import '../../../core/constants/app_colors.dart';
 import '../../../logic/blocs/home/home_bloc.dart';
 import '../../../logic/blocs/plan/plan_bloc.dart';
 
-/// The whole trip encoded into a QR code, so it works offline.
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({super.key});
 
@@ -27,25 +25,21 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   @override
   void initState() {
     super.initState();
-    // Normally loaded by the Plan tab already; make sure regardless.
     final planBloc = context.read<PlanBloc>();
     if (planBloc.state.status == PlanStatus.initial) {
       planBloc.add(const PlanStarted());
     }
   }
 
-  String _qrPayload(PlanState plan, HomeState home) {
-    return jsonEncode({
-      'app': 'RwandaGo',
-      'v': 1,
-      'trip': home.trip?.name ?? 'Rwanda Trip',
-      'days': plan.days.map((d) => d.toJson()).toList(),
-    });
+  String _qrPayload(HomeState home) {
+    // Encodes shareCode as specified in Section 4.9
+    return home.trip?.shareCode ?? 'RWANDAGO_SHARE';
   }
 
   String _shareText(PlanState plan, HomeState home) {
     final buffer = StringBuffer()
-      ..writeln('${home.trip?.name ?? 'Rwanda Trip'} — RwandaGo itinerary')
+      ..writeln('${home.trip?.title ?? 'Rwanda Trip'} — RwandaGo itinerary')
+      ..writeln('Share Code: ${home.trip?.shareCode ?? ''}')
       ..writeln();
     for (final day in plan.days) {
       buffer.writeln('Day ${day.day}: ${day.title}');
@@ -155,7 +149,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 ),
                               ),
                               child: QrImageView(
-                                data: _qrPayload(planState, homeState),
+                                data: _qrPayload(homeState),
                                 version: QrVersions.auto,
                                 size: 260,
                                 eyeStyle: const QrEyeStyle(
