@@ -1,11 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-/// Renders an attraction photo from wherever it lives.
-///
-/// `imageUrl` may be a bundled asset path ("assets/images/lake-kivu.jpg"), a
-/// remote URL from Firestore, or empty. Bundled assets are preferred because
-/// they render with no connectivity, which is the whole point of the app.
+/// Renders `imageUrl` as a bundled asset, a remote URL, or a placeholder.
 class AttractionImage extends StatelessWidget {
   final String imageUrl;
   final BoxFit fit;

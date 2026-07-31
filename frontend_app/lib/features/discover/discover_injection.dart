@@ -9,8 +9,7 @@ import 'domain/usecases/get_attractions.dart';
 import 'domain/usecases/search_attractions.dart';
 import 'presentation/bloc/discover_bloc.dart';
 
-/// Every Discover dependency lives here, so the shared DI file never changes
-/// when this feature grows.
+/// Every Discover dependency lives here, so the shared DI file never changes.
 void initDiscover(GetIt sl) {
   sl.registerFactory(() => DiscoverBloc(getAttractions: sl()));
 

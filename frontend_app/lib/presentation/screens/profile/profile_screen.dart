@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 
-/// Profile tab: account info and settings entries, following the
-/// design (green header with avatar, then a settings list).
+/// Profile tab: account info and a settings list.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 

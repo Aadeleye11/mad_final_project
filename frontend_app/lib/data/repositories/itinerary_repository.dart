@@ -1,9 +1,7 @@
 import '../models/itinerary.dart';
 import '../models/trip.dart';
 
-/// Mock itinerary store. Will hold locally persisted trips once the
-/// Build-a-Plan feature exists; for now it returns the demo trip
-/// from the design (12 activities across 4 days).
+/// Mock store; returns the demo trip until Build-a-Plan persists real ones.
 class ItineraryRepository {
   static const List<ItineraryDay> _days = [
     ItineraryDay(

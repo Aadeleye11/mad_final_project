@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/attraction.dart';
 import 'attraction_image.dart';
 
-/// Grid tile for one attraction: image, name, rating, district.
-///
-/// The image is a fixed aspect ratio and the text area flexible, so the card
-/// cannot overflow when the grid reflows on rotation.
+/// Fixed-aspect image, flexible text area, so it can't overflow on rotation.
 class AttractionCard extends StatelessWidget {
   final Attraction attraction;
   final VoidCallback onTap;
@@ -30,7 +27,10 @@ class AttractionCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 16 / 10,
-              child: AttractionImage(imageUrl: attraction.imageUrl),
+              child: Hero(
+                tag: 'attraction-image-${attraction.id}',
+                child: AttractionImage(imageUrl: attraction.imageUrl),
+              ),
             ),
             Expanded(
               child: Padding(

@@ -1,7 +1,6 @@
 import '../models/attraction.dart';
 
-/// Mock attraction catalog. Later this becomes the offline-first
-/// store synced from a backend (spots bundled for offline use).
+/// Mock catalog for now; later synced from a backend for offline use.
 class AttractionsRepository {
   static const List<Attraction> _attractions = [
     Attraction(

@@ -12,7 +12,7 @@ class SearchAttractions implements UseCase<List<Attraction>, SearchParams> {
   @override
   Future<Either<Failure, List<Attraction>>> call(SearchParams params) {
     final query = params.query.trim();
-    // An empty search is not an error — it means "show everything".
+    // An empty search isn't an error; it means "show everything".
     if (query.isEmpty) return repository.getAttractions();
     if (query.length < 2) {
       return Future.value(

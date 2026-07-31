@@ -6,8 +6,7 @@ import 'home/home_screen.dart';
 import 'plan/plan_screen.dart';
 import 'profile/profile_screen.dart';
 
-/// App scaffold after login: the 4-tab bottom navigation from the
-/// design (Home · Plan · Discover · Profile).
+/// 4-tab bottom navigation shown after login.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 

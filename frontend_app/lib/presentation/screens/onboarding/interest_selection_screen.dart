@@ -6,13 +6,8 @@ import '../../../core/constants/app_interests.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/interests/interests_bloc.dart';
 
-/// Interest picker from the Figma design ("What are you into?").
-///
-/// Shown automatically right after a user's FIRST login/signup
-/// (gated by PreferencesRepository.hasSelectedInterests). Afterwards
-/// it is only reachable from settings — pass `arguments: true` when
-/// navigating to '/interests' to open it in settings mode, which
-/// shows a back button and pops instead of continuing to home.
+/// Shown after first login/signup, or from settings via `arguments: true`
+/// (shows a back button and pops instead of continuing to home).
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({super.key});
 

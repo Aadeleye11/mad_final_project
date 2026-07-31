@@ -2,7 +2,7 @@
   {
     "id": "volcanoes-np",
     "name": "Volcanoes National Park",
-    "description": "Rwanda's most famous park, home to mountain gorillas and golden monkeys across the Virunga chain. Treks depart early from Kinigi headquarters.",
+    "description": "Rwanda's most famous park, spanning five of the eight volcanoes in the Virunga Massif on the border with Uganda and the DR Congo. It shelters a significant share of the world's remaining mountain gorillas, a population that has slowly recovered from the brink of extinction since Dian Fossey began her research here in the 1960s. Treks depart early from Kinigi headquarters in small guided groups, climbing through farmland and bamboo forest before a strictly timed hour with a habituated gorilla family. Golden monkey tracking, a hike to Fossey's grave at the old Karisoke research camp, and the Twin Lakes are quieter alternatives on the same permit system.",
     "category": "wildlife",
     "latitude": -1.4833,
     "longitude": 29.5333,
@@ -15,7 +15,7 @@
   {
     "id": "lake-kivu",
     "name": "Lake Kivu",
-    "description": "One of Africa's great lakes, with beach towns at Gisenyi, Kibuye and Rusizi. Swimming is safe: there are no crocodiles or hippos.",
+    "description": "One of Africa's Great Lakes, stretching along Rwanda's western border with the DR Congo and ringed by terraced hills and volcanic peaks. Unusually, its depths hold vast reserves of dissolved methane and carbon dioxide, now tapped for power generation, one of only a handful of lakes in the world where this happens. Swimming is safe here, unlike most African lakes, since the water is too deep and cold near the shore for crocodiles or hippos to establish themselves. Gisenyi has the liveliest beach scene, Kibuye is quieter with island boat trips, and the Congo Nile Trail runs the length of the shoreline for multi-day cycling or hiking between towns.",
     "category": "nature",
     "latitude": -2.05,
     "longitude": 29.25,
@@ -28,7 +28,7 @@
   {
     "id": "kigali-genocide-memorial",
     "name": "Kigali Genocide Memorial",
-    "description": "The memorial at Gisozi where more than 250,000 victims are buried. Permanent exhibitions cover the 1994 genocide against the Tutsi and its aftermath.",
+    "description": "The national memorial at Gisozi, opened in 2004 on the tenth anniversary of the genocide, where more than 250,000 victims are buried in mass graves within the surrounding gardens. The main exhibition traces the history of ethnic division in Rwanda from the colonial period through the hundred days of killing in 1994, told through photographs, testimony and personal belongings. A separate room is dedicated entirely to children who were killed, each represented by a large photograph and a short account of their life. It is one of the country's most visited sites and, for most travellers, the place that puts everything else in Rwanda into context.",
     "category": "history",
     "latitude": -1.9306,
     "longitude": 30.0594,
@@ -41,12 +41,12 @@
   {
     "id": "nyungwe-forest",
     "name": "Nyungwe National Park",
-    "description": "Ancient montane rainforest with chimpanzee tracking and East Africa's only canopy walkway, suspended 50 metres above the forest floor.",
+    "description": "One of Africa's oldest rainforests, thought to have survived the last ice age largely intact, covering over 1,000 square kilometres of mountain terrain in Rwanda's south-west. It shelters 13 primate species including chimpanzees and the striking Angola colobus, alongside hundreds of bird species and orchid varieties found nowhere else. Chimp tracking is tougher than gorilla trekking, since the chimps range far and move fast through the canopy, but permits cost a fraction of the price. The 200-metre canopy walkway, East Africa's only one, swings 50 metres above the forest floor and gives a rare view down into the treetops rather than up from below.",
     "category": "nature",
     "latitude": -2.4833,
     "longitude": 29.2,
     "rating": 4.6,
-    "imageUrl": "",
+    "imageUrl": "assets/images/nyungwe-forest.jpg",
     "district": "Nyamasheke",
     "localTip": "Chimp tracking starts at 5am. Stay inside the park the night before or you will not make it.",
     "bestDays": []
@@ -54,12 +54,12 @@
   {
     "id": "kimironko-market",
     "name": "Kimironko Market",
-    "description": "Kigali's largest market: produce, spices, kitenge fabric and tailors who will make a garment in a day.",
+    "description": "Kigali's largest and busiest market, spread across a covered hall where hundreds of vendors sell everything from fresh produce and dried beans to spices, secondhand clothes and household goods. Upstairs is dedicated almost entirely to kitenge and other printed fabrics, sold by the metre alongside dozens of tailors who can turn a length of cloth into a finished garment within a day. Prices aren't fixed, and a bit of good-natured bargaining is expected and enjoyed rather than seen as awkward. It's less a tourist attraction than a genuine slice of daily Kigali life, so come hungry and curious rather than in a hurry.",
     "category": "food",
     "latitude": -1.9403,
     "longitude": 30.1236,
     "rating": 4.5,
-    "imageUrl": "assets/images/kimironko-market.png",
+    "imageUrl": "assets/images/kimironko-market.jpg",
     "district": "Gasabo",
     "localTip": "Saturday morning is the market at full tilt. A Wednesday afternoon is a different, much quieter place.",
     "bestDays": [
@@ -69,12 +69,12 @@
   {
     "id": "inema-arts-center",
     "name": "Inema Arts Center",
-    "description": "Artist-run studio and gallery in Kacyiru showing contemporary Rwandan painting and sculpture, with resident artists working on site.",
+    "description": "An artist-run studio and gallery in Kacyiru, founded by brothers Emmanuel Nkuranga and Innocent Nkurunziza to give Rwandan contemporary artists a permanent space to work, exhibit and sell without going through outside galleries. A rotating group of resident painters and sculptors work on site most days, so visitors can watch pieces being made rather than just viewing a finished collection on a wall. The centre also runs a children's art programme and hosts regular exhibitions, workshops and live-music evenings that draw a mixed crowd of artists, expats and locals. It's a good stop for picking up original work directly from the artist, at gallery prices rather than souvenir-market prices.",
     "category": "culture",
     "latitude": -1.9447,
     "longitude": 30.0919,
     "rating": 4.7,
-    "imageUrl": "",
+    "imageUrl": "assets/images/inema-arts-center.jpg",
     "district": "Gasabo",
     "localTip": "Thursday evenings there is live music and the studios stay open late.",
     "bestDays": [
@@ -84,7 +84,7 @@
   {
     "id": "akagera-np",
     "name": "Akagera National Park",
-    "description": "Rwanda's savannah park in the east, with lion, rhino, elephant and buffalo restored over the past decade. Boat safaris run on Lake Ihema.",
+    "description": "Rwanda's only savannah park, covering the country's low-lying east along the Tanzanian border, where rolling grassland gives way to acacia woodland, papyrus swamp and a chain of lakes. The park nearly collapsed after 1994, when returning refugees settled and farmed much of its land, but a partnership with African Parks from 2010 turned it around: lions were reintroduced in 2015 and eastern black rhino in 2017, making Akagera the only Big Five park in Rwanda. Game drives cover the open plains in the south, while two-hour boat safaris on Lake Ihema get close to hippos, crocodiles and a huge variety of waterbirds without the need for a 4x4. It's the closest thing in Rwanda to the classic East African safari, and far less crowded than parks in Kenya or Tanzania.",
     "category": "wildlife",
     "latitude": -1.6833,
     "longitude": 30.7333,
@@ -97,7 +97,7 @@
   {
     "id": "kings-palace-nyanza",
     "name": "King's Palace Museum",
-    "description": "Reconstruction of the traditional royal residence at Nyanza, including the long-horned Inyambo cattle and their praise singers.",
+    "description": "Nyanza was the seat of Rwanda's monarchy for much of the pre-colonial period, and this museum reconstructs the traditional royal residence exactly as it would have stood, built from woven reeds and wood without a single nail. A short walk away is the very different colonial-era palace built for King Mutara III Rudahigwa in the 1930s, furnished as he left it and offering a striking contrast between the two eras of Rwandan kingship. The grounds keep a small herd of Inyambo, the long-horned cattle bred specifically for the royal court, whose handlers perform traditional praise poetry to them much as they would have for a king. Together the two sites give a fuller picture of Rwandan history than almost anywhere else outside Kigali.",
     "category": "history",
     "latitude": -2.3517,
     "longitude": 29.7386,
@@ -110,12 +110,12 @@
   {
     "id": "musanze-caves",
     "name": "Musanze Caves",
-    "description": "A two-kilometre lava tube formed by the Virunga eruptions, with bat colonies and openings to the surface.",
+    "description": "A network of lava tubes carved out by the Virunga volcanoes' eruptions thousands of years ago, running for roughly two kilometres beneath the farmland north of Musanze town. Guided tours cover about half that distance, weaving through chambers where sunlight breaks through natural skylights in the collapsed roof and past colonies of bats roosting in the darker sections. Helmets and headlamps are provided and included in the entry fee, and no caving experience is needed; the walking is easy underfoot even if the rock overhead is not. It's a good half-day option to pair with a trek, since it needs no advance permit and runs on a fixed schedule throughout the day.",
     "category": "adventure",
     "latitude": -1.5,
     "longitude": 29.6333,
     "rating": 4.3,
-    "imageUrl": "",
+    "imageUrl": "assets/images/musanze-caves.jpg",
     "district": "Musanze",
     "localTip": "Wear closed shoes. The floor is loose volcanic rock and it stays wet year round.",
     "bestDays": []
@@ -123,7 +123,7 @@
   {
     "id": "ethnographic-museum",
     "name": "Ethnographic Museum",
-    "description": "Rwanda's richest collection of ethnographic and archaeological material, housed in Huye in a building gifted by Belgium in 1989.",
+    "description": "Rwanda's national museum, opened in 1989 as a gift from the Belgian government to mark 25 years of independence, and still the country's most comprehensive collection of ethnographic and archaeological material. Exhibits move through traditional house construction, basketry, ironwork, musical instruments and royal regalia, tracing daily life and craft in Rwanda from long before colonial contact. A full-scale traditional homestead reconstructed in the grounds gives a hands-on sense of the objects seen inside the galleries. Huye itself was the intellectual capital of colonial-era Rwanda, and the museum remains the natural anchor for a day spent exploring the town's other academic and religious buildings.",
     "category": "culture",
     "latitude": -2.6,
     "longitude": 29.7397,
@@ -136,12 +136,12 @@
   {
     "id": "heaven-restaurant",
     "name": "Heaven Restaurant",
-    "description": "Terrace restaurant in Kiyovu serving Rwandan and pan-African dishes, with a view over the city and a well-known cocktail list.",
+    "description": "A hillside terrace restaurant in Kiyovu, opened by an American couple with the explicit goal of training and employing young Rwandans in hospitality, and now one of Kigali's best-known dining rooms. The kitchen reworks Rwandan and pan-African staples into a more polished menu, sourcing produce from its own farm and from smallholders around the city rather than importing. The terrace looks out over the valleys and hills of central Kigali and is at its best just before sunset, when the tables fill with a mix of diplomats, NGO staff and locals celebrating something. The bar has one of the city's more inventive cocktail lists, built around local ingredients like passionfruit, ginger and Rwandan gin.",
     "category": "food",
     "latitude": -1.9536,
     "longitude": 30.0606,
     "rating": 4.6,
-    "imageUrl": "",
+    "imageUrl": "assets/images/heaven-restaurant.jpg",
     "district": "Nyarugenge",
     "localTip": "Book a table before sunset for the view. Walk-ins after 7pm rarely get the terrace.",
     "bestDays": []
@@ -149,12 +149,12 @@
   {
     "id": "mount-bisoke",
     "name": "Mount Bisoke",
-    "description": "Day hike up a 3,711-metre volcano to a crater lake at the summit, inside Volcanoes National Park.",
+    "description": "One of the eight Virunga volcanoes, and the most climbable of them on a single well-marked day hike inside Volcanoes National Park. The trail climbs steadily through farmland, then bamboo, then a stretch of dense afro-montane forest that occasionally hosts feeding gorilla groups, before opening onto the exposed upper slopes for the final push to the crater rim. At the top, the reward is a still, near-perfectly circular crater lake sitting inside the volcano's mouth, with views on a clear day stretching across the whole Virunga chain and into DR Congo and Uganda. Permits are booked through the same system as gorilla trekking but cost far less, since Bisoke is rated a moderate-to-strenuous hike rather than a wildlife encounter.",
     "category": "adventure",
     "latitude": -1.4581,
     "longitude": 29.4906,
     "rating": 4.5,
-    "imageUrl": "",
+    "imageUrl": "assets/images/mount-bisoke.jpg",
     "district": "Musanze",
     "localTip": "Six hours round trip and the descent is pure mud. Hire gaiters and a walking stick at the base.",
     "bestDays": []

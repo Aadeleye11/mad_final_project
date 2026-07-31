@@ -11,7 +11,7 @@ class DiscoverStarted extends DiscoverEvent {
   const DiscoverStarted();
 }
 
-/// Pull to refresh — bypasses nothing, just re-runs the load.
+/// Pull to refresh; just re-runs the load.
 class DiscoverRefreshed extends DiscoverEvent {
   const DiscoverRefreshed();
 }

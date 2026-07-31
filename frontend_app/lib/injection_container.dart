@@ -5,10 +5,7 @@ import 'features/discover/discover_injection.dart';
 
 final sl = GetIt.instance;
 
-/// Shared registrations plus one call per feature.
-///
-/// Do not register feature dependencies here — put them in your own
-/// `<feature>_injection.dart` so this file never causes merge conflicts.
+/// Shared registrations only; put feature deps in `<feature>_injection.dart`.
 Future<void> init() async {
   final prefs = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => prefs);

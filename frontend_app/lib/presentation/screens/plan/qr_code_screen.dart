@@ -12,9 +12,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../logic/blocs/home/home_bloc.dart';
 import '../../../logic/blocs/plan/plan_bloc.dart';
 
-/// "Your Offline Itinerary" screen from the design: the whole trip
-/// encoded into a QR code that works without connectivity, plus a
-/// share action.
+/// The whole trip encoded into a QR code, so it works offline.
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({super.key});
 

@@ -1,7 +1,6 @@
 import '../models/user.dart';
 
-/// Mock auth repository. Swap the bodies for real API calls
-/// (e.g. via an AuthProvider in data/providers/) once a backend exists.
+/// Mock; swap for real API calls via an AuthProvider once a backend exists.
 class AuthRepository {
   User? _currentUser;
 

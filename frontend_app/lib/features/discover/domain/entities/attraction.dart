@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// A single point of interest. Pure Dart — no Firebase, no Flutter — so it is
-/// cheap to unit test and safe to cache offline.
+/// Pure Dart, no Firebase or Flutter, so it's cheap to test and cache.
 class Attraction extends Equatable {
   final String id;
   final String name;
@@ -13,8 +12,7 @@ class Attraction extends Equatable {
   final String imageUrl;
   final String district;
 
-  /// Free text like "Best on Saturday mornings" — the local knowledge the
-  /// user interviews said generic platforms never surface.
+  /// Local knowledge generic platforms don't surface, e.g. "Best on Saturdays".
   final String? localTip;
 
   /// Days this place is worth visiting, 1 = Monday. Empty means any day.

@@ -26,8 +26,7 @@ import 'presentation/screens/onboarding/interest_selection_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Wrapped so the app still boots before Firebase is fully wired up.
-  // Without it, the Discover tab falls back to its bundled seed data.
+  // Wrapped so the app still boots even if Firebase isn't configured.
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -73,8 +72,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => PlanBloc(context.read<ItineraryRepository>()),
           ),
-          // Discover feature owns its own DI graph (get_it) so it never
-          // touches the shared providers above; only the BLoC is exposed here.
+          // Discover owns its own DI graph; only the BLoC is exposed here.
           BlocProvider<DiscoverBloc>(
             create: (_) => di.sl<DiscoverBloc>()..add(const DiscoverStarted()),
           ),

@@ -50,8 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.authenticated) {
-            // New accounts always pick interests first, but check anyway
-            // in case this email selected them on this device before.
+            // Check anyway in case this email already picked interests here.
             final isFirstTime = !context
                 .read<PreferencesRepository>()
                 .hasSelectedInterests(state.user!.email);
