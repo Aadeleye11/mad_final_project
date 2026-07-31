@@ -3,13 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:frontend_app/data/repositories/preferences_repository.dart';
+import 'package:frontend_app/data/repositories/profile_repository.dart';
 import 'package:frontend_app/injection_container.dart' as di;
 import 'package:frontend_app/main.dart';
 
 Future<MyApp> buildApp({Map<String, Object> prefs = const {}}) async {
   SharedPreferences.setMockInitialValues(prefs);
   final sharedPrefs = await SharedPreferences.getInstance();
-  return MyApp(preferencesRepository: PreferencesRepository(sharedPrefs));
+  return MyApp(
+    preferencesRepository: PreferencesRepository(sharedPrefs),
+    profileRepository: ProfileRepository(sharedPrefs),
+  );
 }
 
 Future<void> pumpToLogin(WidgetTester tester, MyApp app) async {
@@ -28,10 +32,8 @@ Future<void> login(WidgetTester tester) async {
 }
 
 void main() {
-  // MainShell's IndexedStack builds every tab eagerly, including the real
-  // DiscoverPage, so its DiscoverBloc must be resolvable via GetIt before
-  // any test reaches Home. buildApp() below bypasses main(), which is the
-  // only other place di.init() normally runs.
+  // MainShell builds every tab eagerly, so DiscoverBloc must already be
+  // in GetIt; buildApp() below bypasses main(), the only other init() call.
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
     await di.init();

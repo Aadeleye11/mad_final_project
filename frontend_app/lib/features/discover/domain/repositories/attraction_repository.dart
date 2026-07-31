@@ -14,7 +14,6 @@ abstract class AttractionRepository {
 
   Future<Either<Failure, Attraction>> getById(String id);
 
-  /// Resolves the compact ID list decoded from a scanned QR code.
-  /// Reads from the local cache only, so it works with no connectivity.
+  /// For a scanned QR code's ID list. Reads the local cache only.
   Future<Either<Failure, List<Attraction>>> getByIds(List<String> ids);
 }

@@ -5,8 +5,7 @@ enum DiscoverStatus { initial, loading, success, failure }
 class DiscoverState extends Equatable {
   final DiscoverStatus status;
 
-  /// Everything loaded, before filtering. Kept so filtering never re-hits the
-  /// network.
+  /// Everything loaded, before filtering, so filtering never re-hits the network.
   final List<Attraction> all;
 
   /// What the grid actually renders.

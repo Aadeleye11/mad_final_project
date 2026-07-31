@@ -7,8 +7,7 @@ import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/home/home_bloc.dart';
 import '../../widgets/spot_card.dart';
 
-/// Home dashboard tab: greeting header, trip summary card with
-/// quick actions, and the featured spots carousel.
+/// Home dashboard: greeting, trip summary, and featured spots.
 class HomeScreen extends StatefulWidget {
   final ValueChanged<int> onNavigateToTab;
 
@@ -78,8 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Teal greeting header; extra bottom padding so the
-              // summary card can overlap it like in the design.
+              // Extra bottom padding lets the summary card overlap the header.
               Container(
                 width: double.infinity,
                 color: AppColors.primary,

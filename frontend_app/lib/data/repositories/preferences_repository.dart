@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Local, offline-first storage for user preferences.
-/// Keys are scoped per user email so multiple accounts on one
-/// device each get their own first-time interest selection.
+/// Keys are scoped per user email, so each account gets its own interests.
 class PreferencesRepository {
   final SharedPreferences _prefs;
 

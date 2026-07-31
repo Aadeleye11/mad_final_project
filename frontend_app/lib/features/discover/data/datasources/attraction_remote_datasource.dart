@@ -6,9 +6,8 @@ abstract class AttractionRemoteDataSource {
 }
 
 class AttractionRemoteDataSourceImpl implements AttractionRemoteDataSource {
-  /// Optional so tests can inject a fake instance. Left null in the app, the
-  /// real handle is resolved lazily inside [fetchAll] — that way the app still
-  /// starts (and falls back to the cache) if Firebase has not been configured.
+  /// Optional so tests can inject a fake; resolved lazily so the app still
+  /// starts if Firebase isn't configured yet.
   final FirebaseFirestore? _injected;
 
   AttractionRemoteDataSourceImpl([this._injected]);

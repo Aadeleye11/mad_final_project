@@ -82,8 +82,7 @@ class _Results extends StatelessWidget {
           context.read<DiscoverBloc>().add(const DiscoverRefreshed()),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Responsive column count: 2 on a phone, more on wide or landscape
-          // screens. This is what keeps the grid from overflowing on rotation.
+          // Responsive columns keep the grid from overflowing on rotation.
           final columns = (constraints.maxWidth ~/ 180).clamp(2, 4);
           return GridView.builder(
             padding: const EdgeInsets.all(16),

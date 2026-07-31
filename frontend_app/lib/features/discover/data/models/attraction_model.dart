@@ -1,7 +1,6 @@
 import '../../domain/entities/attraction.dart';
 
-/// Data-layer representation of [Attraction]. Knows about JSON and Firestore
-/// so the domain entity does not have to.
+/// Knows about JSON and Firestore so the domain entity doesn't have to.
 class AttractionModel extends Attraction {
   const AttractionModel({
     required super.id,

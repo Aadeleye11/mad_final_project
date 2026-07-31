@@ -5,8 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../data/models/itinerary.dart';
 import '../../../logic/blocs/plan/plan_bloc.dart';
 
-/// My Plan tab from the design: day chips, a timeline of activity
-/// cards with colored category tags, and a floating QR button.
+/// Plan tab: day chips, an activity timeline, and a QR button.
 class PlanScreen extends StatefulWidget {
   const PlanScreen({super.key});
 

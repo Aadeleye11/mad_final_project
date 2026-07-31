@@ -8,10 +8,8 @@ import '../../domain/usecases/get_attractions.dart';
 part 'discover_event.dart';
 part 'discover_state.dart';
 
-/// Owns every piece of Discover state. No `setState` anywhere in this feature.
-///
-/// Filtering happens here rather than in the widget so the same rules can be
-/// unit tested without pumping a widget tree.
+/// Filtering lives here, not in the widget, so it's unit-testable without a
+/// widget tree.
 class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   final GetAttractions getAttractions;
 

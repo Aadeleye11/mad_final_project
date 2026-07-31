@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/entities/attraction.dart';
 
-/// Horizontally scrolling filter chips. Scrolls rather than wraps, so it can
-/// never overflow in landscape however many categories exist.
+/// Scrolls rather than wraps, so it never overflows in landscape.
 class CategoryFilterBar extends StatelessWidget {
   final AttractionCategory? selected;
   final ValueChanged<AttractionCategory?> onSelected;

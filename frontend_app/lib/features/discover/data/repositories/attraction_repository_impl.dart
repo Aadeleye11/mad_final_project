@@ -10,12 +10,8 @@ import '../datasources/attraction_local_datasource.dart';
 import '../datasources/attraction_remote_datasource.dart';
 import '../models/attraction_model.dart';
 
-/// Decides where attraction data comes from.
-///
-/// Order of preference: Firestore (fresh) -> local cache (offline) ->
-/// bundled seed asset (first launch with no connectivity). Filtering and
-/// searching run in memory because the whole catalogue is small, which keeps
-/// every query working offline.
+/// Order of preference: Firestore, then local cache, then the bundled seed
+/// asset. Filtering runs in memory since the catalogue is small.
 class AttractionRepositoryImpl implements AttractionRepository {
   final AttractionRemoteDataSource remote;
   final AttractionLocalDataSource local;
@@ -34,7 +30,7 @@ class AttractionRepositoryImpl implements AttractionRepository {
       }
       return Right(await _fallback());
     } catch (_) {
-      // Network, Firestore, or uninitialised Firebase — fall back rather than failing the screen.
+      // Fall back rather than fail the screen.
       try {
         return Right(await _fallback());
       } catch (_) {
@@ -43,7 +39,7 @@ class AttractionRepositoryImpl implements AttractionRepository {
     }
   }
 
-  /// Cache first, then the asset shipped inside the APK.
+  /// Cache first, then the bundled asset.
   Future<List<AttractionModel>> _fallback() async {
     if (local.hasCache) {
       final cached = await local.getCached();

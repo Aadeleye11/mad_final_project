@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// Domain-layer error type. Repositories return `Either<Failure, T>` so the
-/// presentation layer never catches raw exceptions.
+/// Repositories return `Either<Failure, T>`, so callers never catch raw exceptions.
 abstract class Failure extends Equatable {
   final String message;
   const Failure(this.message);

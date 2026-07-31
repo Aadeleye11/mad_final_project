@@ -9,8 +9,7 @@ class SpotCard extends StatelessWidget {
 
   const SpotCard({super.key, required this.attraction, this.onTap});
 
-  /// Bundled photo with a gradient + category icon fallback for
-  /// spots that don't have an image yet.
+  /// Falls back to a gradient + category icon when there's no image.
   static Widget spotImage(Attraction attraction, {double iconSize = 40}) {
     final fallback = Container(
       decoration: const BoxDecoration(

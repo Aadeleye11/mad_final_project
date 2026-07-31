@@ -4,9 +4,6 @@ import '../../../core/constants/app_colors.dart';
 import '../../../data/models/attraction.dart';
 import '../../widgets/spot_card.dart';
 
-/// Spot detail page, following the Figma design: photo hero with a
-/// floating back button, teal title band (name, rating, distance),
-/// About section, Key Information cards and a pill-shaped CTA.
 /// Expects the [Attraction] via route arguments.
 class AttractionDetailScreen extends StatelessWidget {
   const AttractionDetailScreen({super.key});
@@ -31,8 +28,7 @@ class AttractionDetailScreen extends StatelessWidget {
                         width: double.infinity,
                         child: SpotCard.spotImage(attraction, iconSize: 80),
                       ),
-                      // Fade the bottom of the photo into the teal title
-                      // band so they blend like in the design.
+                      // Fades the photo into the title band below it.
                       Positioned(
                         left: 0,
                         right: 0,
@@ -62,7 +58,6 @@ class AttractionDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Teal title band under the photo, like the design.
                   Container(
                     width: double.infinity,
                     color: AppColors.primary,
