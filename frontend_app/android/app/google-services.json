@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804583958891",
+    "project_id": "rwandago-386d4",
+    "storage_bucket": "rwandago-386d4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804583958891:android:456675ca0eee664644c42e",
+        "android_client_info": {
+          "package_name": "com.example.frontend_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVrsRnKtXnbMhDzCwX7B1ciOhIgQ4icK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
