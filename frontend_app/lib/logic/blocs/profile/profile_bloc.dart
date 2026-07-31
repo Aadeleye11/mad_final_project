@@ -43,7 +43,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       bio: event.bio,
       phone: event.phone,
       location: event.location,
-      language: event.language,
     );
     await _profileRepository.saveProfile(state.email, updated);
     emit(state.copyWith(status: ProfileStatus.saved, profile: updated));

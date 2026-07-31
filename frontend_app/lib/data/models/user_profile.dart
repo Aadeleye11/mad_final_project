@@ -8,7 +8,6 @@ class UserProfile extends Equatable {
   final String phone;
   final String location;
   final String avatarPath;
-  final String language;
 
   const UserProfile({
     this.displayName = '',
@@ -16,7 +15,6 @@ class UserProfile extends Equatable {
     this.phone = '',
     this.location = '',
     this.avatarPath = '',
-    this.language = 'English',
   });
 
   bool get hasAvatar => avatarPath.isNotEmpty;
@@ -27,7 +25,6 @@ class UserProfile extends Equatable {
     String? phone,
     String? location,
     String? avatarPath,
-    String? language,
   }) {
     return UserProfile(
       displayName: displayName ?? this.displayName,
@@ -35,7 +32,6 @@ class UserProfile extends Equatable {
       phone: phone ?? this.phone,
       location: location ?? this.location,
       avatarPath: avatarPath ?? this.avatarPath,
-      language: language ?? this.language,
     );
   }
 
@@ -46,7 +42,6 @@ class UserProfile extends Equatable {
       phone: json['phone'] as String? ?? '',
       location: json['location'] as String? ?? '',
       avatarPath: json['avatarPath'] as String? ?? '',
-      language: json['language'] as String? ?? 'English',
     );
   }
 
@@ -56,16 +51,8 @@ class UserProfile extends Equatable {
     'phone': phone,
     'location': location,
     'avatarPath': avatarPath,
-    'language': language,
   };
 
   @override
-  List<Object?> get props => [
-    displayName,
-    bio,
-    phone,
-    location,
-    avatarPath,
-    language,
-  ];
+  List<Object?> get props => [displayName, bio, phone, location, avatarPath];
 }

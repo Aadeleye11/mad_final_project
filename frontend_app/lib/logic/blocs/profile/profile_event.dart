@@ -29,16 +29,14 @@ class ProfileSaved extends ProfileEvent {
   final String bio;
   final String phone;
   final String location;
-  final String language;
 
   const ProfileSaved({
     required this.displayName,
     required this.bio,
     required this.phone,
     required this.location,
-    required this.language,
   });
 
   @override
-  List<Object> get props => [displayName, bio, phone, location, language];
+  List<Object> get props => [displayName, bio, phone, location];
 }

@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
-import 'data/repositories/attractions_repository.dart';
 import 'data/repositories/auth_repository.dart';
 import 'data/repositories/itinerary_repository.dart';
 import 'data/repositories/preferences_repository.dart';
 import 'data/repositories/profile_repository.dart';
 import 'features/discover/domain/repositories/attraction_repository.dart';
+import 'features/discover/domain/usecases/get_attractions.dart';
 import 'features/discover/presentation/bloc/discover_bloc.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart' as di;
@@ -30,9 +30,7 @@ import 'presentation/screens/splash_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Enable offline reads/writes from local cache (Required for offline QR itinerary)
   FirebaseFirestore.instance.settings = const Settings(
@@ -73,7 +71,6 @@ class MyApp extends StatelessWidget {
             attractions: di.sl<AttractionRepository>(),
           ),
         ),
-        RepositoryProvider(create: (_) => AttractionsRepository()),
         RepositoryProvider.value(value: profileRepository),
       ],
       child: MultiBlocProvider(
@@ -85,10 +82,7 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 InterestsBloc(context.read<PreferencesRepository>()),
           ),
-          BlocProvider(
-            create: (context) =>
-                HomeBloc(context.read<AttractionsRepository>()),
-          ),
+          BlocProvider(create: (context) => HomeBloc(di.sl<GetAttractions>())),
           BlocProvider(
             create: (context) => PlanBloc(context.read<ItineraryRepository>()),
           ),

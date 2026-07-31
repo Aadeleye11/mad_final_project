@@ -4,6 +4,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../data/models/itinerary.dart';
+import '../../../../logic/blocs/plan/plan_bloc.dart';
+import '../../../../logic/services/itinerary_generator.dart';
+import '../../../../presentation/screens/plan/activity_editor_sheet.dart';
 import '../../domain/entities/attraction.dart';
 import '../bloc/discover_bloc.dart';
 import '../widgets/attraction_image.dart';
@@ -77,22 +81,72 @@ class _DetailBody extends StatelessWidget {
     );
   }
 
-  void _showAddedDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add to plan'),
-        content: Text(
-          '${attraction.name} will be added once you have an active trip.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+  Future<void> _addToPlan(BuildContext context) async {
+    final planBloc = context.read<PlanBloc>();
+    final planState = planBloc.state;
+    if (!planState.hasPlan || planState.days.isEmpty) {
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('No active trip'),
+          content: Text(
+            '${attraction.name} will be added once you have an active trip. '
+            'Create one from the Plan tab first.',
           ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final dayIndex = planState.days.length == 1
+        ? 0
+        : await showModalBottomSheet<int>(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: AppColors.surface,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (sheetContext) => _DayPickerSheet(
+              attractionName: attraction.name,
+              days: planState.days,
+              preselected: planState.selectedDayIndex,
+            ),
+          );
+    if (dayIndex == null || !context.mounted) return;
+
+    final day = planState.days[dayIndex];
+    final suggestedTime =
+        day.activities.length < ItineraryGenerator.slots.length
+        ? ItineraryGenerator.slots[day.activities.length]
+        : ItineraryGenerator.slots.last;
+    final stamp = DateTime.now().microsecondsSinceEpoch;
+
+    final activity = await showActivityEditor(
+      context,
+      heading: 'Add to Day ${day.day}',
+      activity: ItineraryActivity(
+        id: '${attraction.id}-$stamp',
+        time: suggestedTime,
+        title: attraction.name,
+        category: attraction.category.label,
+        attractionId: attraction.id,
       ),
     );
+    if (activity == null || !context.mounted) return;
+
+    planBloc.add(PlanActivityAdded(dayIndex: dayIndex, activity: activity));
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text('${attraction.name} added to Day ${day.day}')),
+      );
   }
 
   @override
@@ -235,7 +289,7 @@ class _DetailBody extends StatelessWidget {
                         minimumSize: const Size.fromHeight(52),
                         shape: const StadiumBorder(),
                       ),
-                      onPressed: () => _showAddedDialog(context),
+                      onPressed: () => _addToPlan(context),
                       icon: const Icon(Icons.add),
                       label: const Text('Add to my plan'),
                     ),
@@ -453,6 +507,139 @@ class _LocalTip extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Lets a trip with multiple days choose which one gets the new activity,
+/// instead of silently dropping everything on whichever day happens to be
+/// selected back on the Plan tab.
+class _DayPickerSheet extends StatelessWidget {
+  final String attractionName;
+  final List<ItineraryDay> days;
+  final int preselected;
+
+  const _DayPickerSheet({
+    required this.attractionName,
+    required this.days,
+    required this.preselected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFDDE3E1),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(
+              'Add "$attractionName" to which day?',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            for (var i = 0; i < days.length; i++) ...[
+              _DayTile(
+                day: days[i],
+                isCurrent: i == preselected,
+                onTap: () => Navigator.of(context).pop(i),
+              ),
+              if (i != days.length - 1) const SizedBox(height: 10),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DayTile extends StatelessWidget {
+  final ItineraryDay day;
+  final bool isCurrent;
+  final VoidCallback onTap;
+
+  const _DayTile({
+    required this.day,
+    required this.isCurrent,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: isCurrent
+          ? AppColors.primaryLight.withValues(alpha: 0.35)
+          : AppColors.background,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: isCurrent
+                    ? AppColors.primary
+                    : AppColors.surface,
+                child: Text(
+                  '${day.day}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isCurrent ? Colors.white : AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Day ${day.day}: ${day.title}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      day.activities.isEmpty
+                          ? 'No activities yet'
+                          : '${day.activities.length} '
+                                '${day.activities.length == 1 ? 'activity' : 'activities'} planned',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+            ],
+          ),
+        ),
       ),
     );
   }

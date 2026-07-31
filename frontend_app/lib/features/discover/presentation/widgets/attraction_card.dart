@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_colors.dart';
 import '../../domain/entities/attraction.dart';
 import 'attraction_image.dart';
 
@@ -20,6 +21,9 @@ class AttractionCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
+      elevation: 3,
+      shadowColor: Colors.black26,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: InkWell(
         onTap: onTap,
         child: Column(
@@ -27,14 +31,59 @@ class AttractionCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 16 / 10,
-              child: Hero(
-                tag: 'attraction-image-${attraction.id}',
-                child: AttractionImage(imageUrl: attraction.imageUrl),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Hero(
+                    tag: 'attraction-image-${attraction.id}',
+                    child: AttractionImage(imageUrl: attraction.imageUrl),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.star,
+                            size: 12,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            attraction.rating.toStringAsFixed(1),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,21 +92,18 @@ class AttractionCard extends StatelessWidget {
                       attraction.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Row(
                       children: [
-                        Icon(
-                          Icons.star,
-                          size: 14,
-                          color: theme.colorScheme.primary,
+                        const Icon(
+                          Icons.place_outlined,
+                          size: 13,
+                          color: AppColors.textSecondary,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          attraction.rating.toStringAsFixed(1),
-                          style: theme.textTheme.labelMedium,
-                        ),
-                        const Spacer(),
+                        const SizedBox(width: 3),
                         Flexible(
                           child: Text(
                             attraction.district,

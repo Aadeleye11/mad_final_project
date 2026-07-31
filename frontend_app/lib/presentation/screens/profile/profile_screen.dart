@@ -74,198 +74,243 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final avatarFile = resolveAvatarFile(profile.avatarPath);
 
         return SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                color: AppColors.primary,
-                padding: const EdgeInsets.fromLTRB(20, 60, 20, 28),
-                child: Row(
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 28,
-                          backgroundColor: Colors.white,
-                          backgroundImage: avatarFile != null
-                              ? FileImage(avatarFile)
-                              : null,
-                          child: avatarFile != null
-                              ? null
-                              : Text(
-                                  initials.isEmpty ? 'T' : initials,
-                                  style: const TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                        ),
-                        Positioned(
-                          right: -2,
-                          bottom: -2,
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const EditProfileScreen(),
-                              ),
-                            ),
-                            child: const CircleAvatar(
-                              radius: 12,
-                              backgroundColor: AppColors.primaryDark,
-                              child: Icon(
-                                Icons.edit,
-                                size: 13,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.primary, AppColors.primaryDark],
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            displayName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                    padding: const EdgeInsets.fromLTRB(20, 60, 20, 28),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 12,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius: 34,
+                                backgroundColor: Colors.white,
+                                backgroundImage: avatarFile != null
+                                    ? FileImage(avatarFile)
+                                    : null,
+                                child: avatarFile != null
+                                    ? null
+                                    : Text(
+                                        initials.isEmpty ? 'T' : initials,
+                                        style: const TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            user?.email ?? '',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    displayName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    user?.email ?? '',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          if (profile.bio.isNotEmpty) ...[
-                            const SizedBox(height: 6),
-                            Text(
+                          ],
+                        ),
+                        if (profile.bio.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
                               profile.bio,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
+                                color: Colors.white,
+                                fontSize: 13,
                                 fontStyle: FontStyle.italic,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white70),
+                            minimumSize: const Size(0, 40),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shape: const StadiumBorder(),
+                          ),
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const EditProfileScreen(),
+                            ),
+                          ),
+                          icon: const Icon(Icons.edit_outlined, size: 16),
+                          label: const Text('Edit profile'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (trip != null)
+                    Transform.translate(
+                      offset: const Offset(0, -18),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              _StatItem(
+                                value: '${trip.activitiesCount}',
+                                label: 'Activities',
+                              ),
+                              _StatDivider(),
+                              _StatItem(
+                                value: '${trip.durationDays}',
+                                label: 'Days',
+                              ),
+                              _StatDivider(),
+                              _StatItem(
+                                value: profile.location.isEmpty
+                                    ? '—'
+                                    : profile.location,
+                                label: 'Home city',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        _SettingsGroup(
+                          children: [
+                            _SettingsTile(
+                              icon: Icons.tune,
+                              title: 'My Interests',
+                              onTap: () => Navigator.of(
+                                context,
+                              ).pushNamed('/interests', arguments: true),
+                            ),
+                            _SettingsTile(
+                              icon: Icons.bookmark_outline,
+                              title: 'Saved Itineraries',
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const SavedItinerariesScreen(),
+                                ),
+                              ),
+                            ),
+                            _SettingsTile(
+                              icon: Icons.download_outlined,
+                              title: 'Offline Data',
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const OfflineDataScreen(),
+                                ),
+                              ),
+                            ),
+                            _SettingsTile(
+                              icon: Icons.info_outline,
+                              title: 'About',
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const AboutScreen(),
+                                ),
                               ),
                             ),
                           ],
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const EditProfileScreen(),
                         ),
-                      ),
-                      icon: const Icon(Icons.settings_outlined),
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-              if (trip != null)
-                Transform.translate(
-                  offset: const Offset(0, -18),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 10,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          _StatItem(
-                            value: '${trip.activitiesCount}',
-                            label: 'Activities',
-                          ),
-                          _StatDivider(),
-                          _StatItem(
-                            value: '${trip.durationDays}',
-                            label: 'Days',
-                          ),
-                          _StatDivider(),
-                          _StatItem(
-                            value: profile.location.isEmpty
-                                ? '—'
-                                : profile.location,
-                            label: 'Home city',
-                          ),
-                        ],
-                      ),
+                        const SizedBox(height: 16),
+                        _SettingsGroup(
+                          children: [
+                            _SettingsTile(
+                              icon: Icons.logout,
+                              title: 'Logout',
+                              color: AppColors.error,
+                              onTap: () => _confirmLogout(context),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                )
-              else
-                const SizedBox(height: 12),
-              _SettingsTile(
-                icon: Icons.tune,
-                title: 'My Interests',
-                onTap: () => Navigator.of(
-                  context,
-                ).pushNamed('/interests', arguments: true),
-              ),
-              _SettingsTile(
-                icon: Icons.bookmark_outline,
-                title: 'Saved Itineraries',
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const SavedItinerariesScreen(),
+                  const SizedBox(height: 28),
+                  const Text(
+                    'RwandaGo v1.0.0',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                ],
               ),
-              _SettingsTile(
-                icon: Icons.language,
-                title: 'Language',
-                trailingText: profile.language,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const EditProfileScreen()),
-                ),
-              ),
-              _SettingsTile(
-                icon: Icons.download_outlined,
-                title: 'Offline Data',
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const OfflineDataScreen()),
-                ),
-              ),
-              _SettingsTile(
-                icon: Icons.info_outline,
-                title: 'About',
-                onTap: () => Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
-              ),
-              _SettingsTile(
-                icon: Icons.logout,
-                title: 'Logout',
-                color: AppColors.error,
-                onTap: () => _confirmLogout(context),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'RwandaGo v1.0.0',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-              ),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
         );
       },
@@ -314,10 +359,43 @@ class _StatDivider extends StatelessWidget {
   }
 }
 
+/// Groups related [_SettingsTile]s into one elevated card with hairline
+/// dividers between rows, rather than each row floating on its own.
+class _SettingsGroup extends StatelessWidget {
+  final List<Widget> children;
+  const _SettingsGroup({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            children[i],
+            if (i != children.length - 1)
+              const Divider(height: 1, indent: 68, color: Color(0xFFEEF1F0)),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _SettingsTile extends StatelessWidget {
   final IconData icon;
   final String title;
-  final String? trailingText;
   final Color? color;
   final VoidCallback onTap;
 
@@ -325,35 +403,42 @@ class _SettingsTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
-    this.trailingText,
     this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: color ?? AppColors.textPrimary),
-      title: Text(
-        title,
-        style: TextStyle(color: color ?? AppColors.textPrimary, fontSize: 15),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (trailingText != null) ...[
-            Text(
-              trailingText!,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
+    final tint = color ?? AppColors.primary;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: tint.withValues(alpha: 0.12),
+              child: Icon(icon, size: 19, color: tint),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: color ?? AppColors.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            const SizedBox(width: 4),
+            Icon(
+              Icons.chevron_right,
+              size: 20,
+              color: color ?? AppColors.textSecondary,
+            ),
           ],
-          Icon(Icons.chevron_right, color: color ?? AppColors.textSecondary),
-        ],
+        ),
       ),
-      onTap: onTap,
     );
   }
 }

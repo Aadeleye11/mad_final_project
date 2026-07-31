@@ -10,8 +10,6 @@ import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/profile/profile_bloc.dart';
 import 'avatar_file.dart';
 
-const _languages = ['English', 'Kinyarwanda', 'French'];
-
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
@@ -25,7 +23,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final TextEditingController _bioController;
   late final TextEditingController _phoneController;
   late final TextEditingController _locationController;
-  late String _language;
 
   @override
   void initState() {
@@ -38,7 +35,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _bioController = TextEditingController(text: profile.bio);
     _phoneController = TextEditingController(text: profile.phone);
     _locationController = TextEditingController(text: profile.location);
-    _language = profile.language;
   }
 
   @override
@@ -53,20 +49,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _pickAvatar() async {
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 4),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Update photo',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ),
             ListTile(
-              leading: const Icon(Icons.photo_camera_outlined),
+              leading: const CircleAvatar(
+                backgroundColor: AppColors.primaryLight,
+                child: Icon(Icons.photo_camera_outlined, color: Colors.white),
+              ),
               title: const Text('Take a photo'),
               onTap: () => Navigator.of(context).pop(ImageSource.camera),
             ),
             ListTile(
-              leading: const Icon(Icons.photo_library_outlined),
+              leading: const CircleAvatar(
+                backgroundColor: AppColors.primaryLight,
+                child: Icon(Icons.photo_library_outlined, color: Colors.white),
+              ),
               title: const Text('Choose from gallery'),
               onTap: () => Navigator.of(context).pop(ImageSource.gallery),
             ),
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -113,7 +134,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         bio: _bioController.text.trim(),
         phone: _phoneController.text.trim(),
         location: _locationController.text.trim(),
-        language: _language,
       ),
     );
     ScaffoldMessenger.of(context)
@@ -132,9 +152,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Edit profile'),
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
+        elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: BlocBuilder<ProfileBloc, ProfileState>(
         buildWhen: (previous, current) =>
@@ -142,127 +164,195 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         builder: (context, state) {
           final avatarFile = resolveAvatarFile(state.profile.avatarPath);
           return SafeArea(
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(24),
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 48,
-                          backgroundColor: AppColors.primaryLight,
-                          backgroundImage: avatarFile != null
-                              ? FileImage(avatarFile)
-                              : null,
-                          child: avatarFile != null
-                              ? null
-                              : const Icon(
-                                  Icons.person,
-                                  size: 44,
-                                  color: Colors.white,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 480),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 16,
+                                        offset: Offset(0, 6),
+                                      ),
+                                    ],
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 56,
+                                    backgroundColor: AppColors.primaryLight,
+                                    backgroundImage: avatarFile != null
+                                        ? FileImage(avatarFile)
+                                        : null,
+                                    child: avatarFile != null
+                                        ? null
+                                        : const Icon(
+                                            Icons.person,
+                                            size: 52,
+                                            color: Colors.white,
+                                          ),
+                                  ),
                                 ),
+                                Positioned(
+                                  right: 4,
+                                  bottom: 4,
+                                  child: GestureDetector(
+                                    onTap: _pickAvatar,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: const BoxDecoration(
+                                        color: AppColors.background,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const CircleAvatar(
+                                        radius: 17,
+                                        backgroundColor: AppColors.primary,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 17,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            TextButton(
+                              onPressed: _pickAvatar,
+                              child: const Text('Change photo'),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: GestureDetector(
-                            onTap: _pickAvatar,
-                            child: const CircleAvatar(
-                              radius: 18,
-                              backgroundColor: AppColors.primary,
-                              child: Icon(
-                                Icons.camera_alt,
-                                size: 18,
-                                color: Colors.white,
-                              ),
+                      ),
+                      const SizedBox(height: 12),
+                      const _SectionLabel('Personal details'),
+                      const SizedBox(height: 10),
+                      _FormCard(
+                        children: [
+                          TextFormField(
+                            controller: _nameController,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              labelText: 'Full name',
+                              prefixIcon: Icon(Icons.person_outline),
+                            ),
+                            validator: (value) =>
+                                (value == null || value.trim().isEmpty)
+                                ? 'Name is required'
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _bioController,
+                            maxLines: 3,
+                            maxLength: 160,
+                            decoration: const InputDecoration(
+                              labelText: 'Bio',
+                              hintText:
+                                  'Tell other travellers a bit about yourself',
+                              alignLabelWithHint: true,
+                              prefixIcon: Icon(Icons.edit_note_outlined),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  TextFormField(
-                    controller: _nameController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Full name',
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    validator: (value) =>
-                        (value == null || value.trim().isEmpty)
-                        ? 'Name is required'
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _bioController,
-                    maxLines: 3,
-                    maxLength: 160,
-                    decoration: const InputDecoration(
-                      labelText: 'Bio',
-                      hintText: 'Tell other travellers a bit about yourself',
-                      alignLabelWithHint: true,
-                      prefixIcon: Icon(Icons.edit_note_outlined),
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'Phone (optional)',
-                      prefixIcon: Icon(Icons.phone_outlined),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _locationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Home city (optional)',
-                      prefixIcon: Icon(Icons.location_city_outlined),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Language',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    children: [
-                      for (final lang in _languages)
-                        ChoiceChip(
-                          label: Text(lang),
-                          selected: _language == lang,
-                          showCheckmark: false,
-                          selectedColor: AppColors.primary,
-                          labelStyle: TextStyle(
-                            color: _language == lang
-                                ? Colors.white
-                                : AppColors.primary,
-                            fontWeight: FontWeight.w500,
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      const _SectionLabel('Contact'),
+                      const SizedBox(height: 10),
+                      _FormCard(
+                        children: [
+                          TextFormField(
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              labelText: 'Phone (optional)',
+                              prefixIcon: Icon(Icons.phone_outlined),
+                            ),
                           ),
-                          onSelected: (_) => setState(() => _language = lang),
-                        ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _locationController,
+                            decoration: const InputDecoration(
+                              labelText: 'Home city (optional)',
+                              prefixIcon: Icon(Icons.location_city_outlined),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton.icon(
+                        onPressed: _save,
+                        icon: const Icon(Icons.check_rounded),
+                        label: const Text('Save changes'),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _save,
-                    child: const Text('Save changes'),
-                  ),
-                ],
+                ),
               ),
             ),
           );
         },
       ),
+    );
+  }
+}
+
+/// Small caps eyebrow label above a grouped [_FormCard], the way premium
+/// settings screens break long forms into scannable sections.
+class _SectionLabel extends StatelessWidget {
+  final String text;
+  const _SectionLabel(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Text(
+        text.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.8,
+          color: AppColors.textSecondary,
+        ),
+      ),
+    );
+  }
+}
+
+class _FormCard extends StatelessWidget {
+  final List<Widget> children;
+  const _FormCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(children: children),
     );
   }
 }

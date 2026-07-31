@@ -68,7 +68,6 @@ void main() {
           bio: 'Updated bio.',
           phone: '+250123456789',
           location: 'Musanze',
-          language: 'Kinyarwanda',
         ),
       ),
     expect: () => [
@@ -90,7 +89,6 @@ void main() {
           bio: 'Updated bio.',
           phone: '+250123456789',
           location: 'Musanze',
-          language: 'Kinyarwanda',
         ),
       ),
     ],
@@ -103,7 +101,6 @@ void main() {
             bio: 'Updated bio.',
             phone: '+250123456789',
             location: 'Musanze',
-            language: 'Kinyarwanda',
           ),
         ),
       ).called(1);

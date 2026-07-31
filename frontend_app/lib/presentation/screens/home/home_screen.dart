@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../data/models/trip.dart';
+import '../../../features/discover/domain/entities/attraction.dart';
+import '../../../features/discover/presentation/pages/attraction_detail_page.dart';
+import '../../../features/discover/presentation/widgets/attraction_image.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/home/home_bloc.dart';
 import '../../../logic/blocs/plan/plan_bloc.dart';
-import '../../widgets/spot_card.dart';
 import '../plan/plan_form_screen.dart';
 
 /// Home dashboard: greeting, trip summary, and featured spots.
@@ -62,9 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
   /// the itinerary is actually edited.
   void _buildOrOpenPlan(Trip? trip) {
     if (trip == null) {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const PlanFormScreen()),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const PlanFormScreen()));
     } else {
       widget.onNavigateToTab(1);
     }
@@ -144,11 +146,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: state.featuredSpots.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) => SpotCard(
+                    itemBuilder: (context, index) => _FeaturedSpotCard(
                       attraction: state.featuredSpots[index],
-                      onTap: () => Navigator.of(context).pushNamed(
-                        '/spot',
-                        arguments: state.featuredSpots[index],
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => AttractionDetailPage(
+                            attractionId: state.featuredSpots[index].id,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -314,6 +319,81 @@ class _QuickAction extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Mirrors the Discover grid's card so a place looks the same everywhere it
+/// shows up, backed by [AttractionImage]'s bundled/remote/placeholder
+/// handling instead of a raw asset path.
+class _FeaturedSpotCard extends StatelessWidget {
+  final Attraction attraction;
+  final VoidCallback onTap;
+
+  const _FeaturedSpotCard({required this.attraction, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 168,
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        color: AppColors.surface,
+        elevation: 2,
+        shadowColor: Colors.black26,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 10,
+                child: Hero(
+                  tag: 'attraction-image-${attraction.id}',
+                  child: AttractionImage(imageUrl: attraction.imageUrl),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      attraction.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          attraction.rating.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

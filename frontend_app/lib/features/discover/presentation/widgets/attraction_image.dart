@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_colors.dart';
+
 /// Renders `imageUrl` as a bundled asset, a remote URL, or a placeholder.
 class AttractionImage extends StatelessWidget {
   final String imageUrl;
@@ -39,15 +41,16 @@ class AttractionImage extends StatelessWidget {
 class _Placeholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ColoredBox(
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: Center(
-        child: Icon(
-          Icons.landscape_outlined,
-          color: theme.colorScheme.outline,
-          size: 32,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primaryLight, AppColors.primary],
         ),
+      ),
+      child: const Center(
+        child: Icon(Icons.landscape_outlined, color: Colors.white70, size: 32),
       ),
     );
   }
