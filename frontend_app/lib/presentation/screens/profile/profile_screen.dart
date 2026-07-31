@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,6 +6,7 @@ import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/home/home_bloc.dart';
 import '../../../logic/blocs/profile/profile_bloc.dart';
 import 'about_screen.dart';
+import 'avatar_file.dart';
 import 'edit_profile_screen.dart';
 import 'offline_data_screen.dart';
 import 'saved_itineraries_screen.dart';
@@ -72,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .take(2)
             .map((w) => w.isEmpty ? '' : w[0].toUpperCase())
             .join();
+        final avatarFile = resolveAvatarFile(profile.avatarPath);
 
         return SingleChildScrollView(
           child: Column(
@@ -87,10 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CircleAvatar(
                           radius: 28,
                           backgroundColor: Colors.white,
-                          backgroundImage: profile.hasAvatar
-                              ? FileImage(File(profile.avatarPath))
+                          backgroundImage: avatarFile != null
+                              ? FileImage(avatarFile)
                               : null,
-                          child: profile.hasAvatar
+                          child: avatarFile != null
                               ? null
                               : Text(
                                   initials.isEmpty ? 'T' : initials,

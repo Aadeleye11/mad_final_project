@@ -47,6 +47,7 @@ dependencies:
 
   # Profile feature (Ayomide)
   image_picker: ^1.1.2
+  path_provider: ^2.1.4
 
   # Discover feature (Ayomide)
   bloc: ^9.0.0

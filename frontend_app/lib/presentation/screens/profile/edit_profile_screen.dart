@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/profile/profile_bloc.dart';
+import 'avatar_file.dart';
 
 const _languages = ['English', 'Kinyarwanda', 'French'];
 
@@ -78,7 +80,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         imageQuality: 85,
       );
       if (picked == null || !mounted) return;
-      context.read<ProfileBloc>().add(ProfileAvatarPicked(picked.path));
+
+      // image_picker's own path lives in a temp/cache dir that isn't
+      // guaranteed to survive a reinstall or the OS clearing cache, so copy
+      // it into permanent app storage before persisting the path.
+      final docsDir = await getApplicationDocumentsDirectory();
+      final extension = picked.path.split('.').last;
+      final savedPath = '${docsDir.path}/profile_avatar.$extension';
+      await File(picked.path).copy(savedPath);
+
+      if (!mounted) return;
+      context.read<ProfileBloc>().add(ProfileAvatarPicked(savedPath));
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -128,6 +140,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         buildWhen: (previous, current) =>
             previous.profile.avatarPath != current.profile.avatarPath,
         builder: (context, state) {
+          final avatarFile = resolveAvatarFile(state.profile.avatarPath);
           return SafeArea(
             child: Form(
               key: _formKey,
@@ -140,10 +153,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         CircleAvatar(
                           radius: 48,
                           backgroundColor: AppColors.primaryLight,
-                          backgroundImage: state.profile.hasAvatar
-                              ? FileImage(File(state.profile.avatarPath))
+                          backgroundImage: avatarFile != null
+                              ? FileImage(avatarFile)
                               : null,
-                          child: state.profile.hasAvatar
+                          child: avatarFile != null
                               ? null
                               : const Icon(
                                   Icons.person,
