@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class Attraction extends Equatable {
@@ -44,6 +45,23 @@ class Attraction extends Equatable {
       entryFee: json['entryFee'] as String? ?? '',
       distance: json['distance'] as String? ?? '',
       imageAsset: json['imageAsset'] as String? ?? '',
+    );
+  }
+
+  factory Attraction.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>? ?? {};
+    return Attraction(
+      id: doc.id,
+      name: data['name'] as String? ?? '',
+      category: data['category'] as String? ?? '',
+      rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
+      location: data['location'] as String? ?? '',
+      description: data['description'] as String? ?? '',
+      bestTime: data['bestTime'] as String? ?? '',
+      duration: data['duration'] as String? ?? '',
+      entryFee: data['entryFee'] as String? ?? '',
+      distance: data['distance'] as String? ?? '',
+      imageAsset: data['imageAsset'] as String? ?? '',
     );
   }
 

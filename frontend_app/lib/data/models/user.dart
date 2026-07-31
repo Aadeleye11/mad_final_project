@@ -1,22 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-  final String id;
+  final String uid;
   final String name;
   final String email;
+  final List<String> defaultInterests;
 
-  const User({required this.id, required this.name, required this.email});
+  const User({
+    required this.uid,
+    required this.name,
+    required this.email,
+    required this.defaultInterests,
+  });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>? ?? {};
     return User(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      email: json['email'] as String,
+      uid: doc.id,
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      defaultInterests: List<String>.from(data['defaultInterests'] ?? []),
     );
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'email': email};
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'defaultInterests': defaultInterests,
+    };
+  }
 
   @override
-  List<Object> get props => [id, name, email];
+  List<Object> get props => [uid, name, email, defaultInterests];
 }
