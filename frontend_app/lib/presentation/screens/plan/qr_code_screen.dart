@@ -8,7 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../logic/blocs/home/home_bloc.dart';
+import '../../../data/models/trip.dart';
 import '../../../logic/blocs/plan/plan_bloc.dart';
 
 class QrCodeScreen extends StatefulWidget {
@@ -31,17 +31,15 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     }
   }
 
-  String _qrPayload(HomeState home) {
-    // Encodes shareCode as specified in Section 4.9
-    return home.trip?.shareCode ?? 'RWANDAGO_SHARE';
-  }
+  /// Encodes the share code as specified in Section 4.9.
+  String _qrPayload(Trip trip) => trip.shareCode;
 
-  String _shareText(PlanState plan, HomeState home) {
+  String _shareText(Trip trip) {
     final buffer = StringBuffer()
-      ..writeln('${home.trip?.title ?? 'Rwanda Trip'} — RwandaGo itinerary')
-      ..writeln('Share Code: ${home.trip?.shareCode ?? ''}')
+      ..writeln('${trip.title} — RwandaGo itinerary')
+      ..writeln('Share Code: ${trip.shareCode}')
       ..writeln();
-    for (final day in plan.days) {
+    for (final day in trip.days) {
       buffer.writeln('Day ${day.day}: ${day.title}');
       for (final activity in day.activities) {
         buffer.writeln('  ${activity.time} — ${activity.title}');
@@ -98,11 +96,25 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       ),
       body: BlocBuilder<PlanBloc, PlanState>(
         builder: (context, planState) {
-          final homeState = context.watch<HomeBloc>().state;
-
-          if (planState.status != PlanStatus.ready) {
+          if (planState.status == PlanStatus.initial ||
+              planState.status == PlanStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(color: AppColors.primary),
+            );
+          }
+
+          final trip = planState.trip;
+          if (trip == null) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Text(
+                  'Create a plan first — the code carries your itinerary, so '
+                  'there is nothing to scan yet.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.textSecondary),
+                ),
+              ),
             );
           }
 
@@ -149,7 +161,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 ),
                               ),
                               child: QrImageView(
-                                data: _qrPayload(homeState),
+                                data: _qrPayload(trip),
                                 version: QrVersions.auto,
                                 size: 260,
                                 eyeStyle: const QrEyeStyle(
@@ -215,7 +227,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         onPressed: () {
                           SharePlus.instance.share(
                             ShareParams(
-                              text: _shareText(planState, homeState),
+                              text: _shareText(trip),
                               subject: 'My RwandaGo itinerary',
                             ),
                           );

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
-import '../../../logic/blocs/home/home_bloc.dart';
+import '../../../logic/blocs/plan/plan_bloc.dart';
 import '../../../logic/blocs/profile/profile_bloc.dart';
 import 'about_screen.dart';
 import 'avatar_file.dart';
@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthBloc bloc) => bloc.state.user);
-    final trip = context.select((HomeBloc bloc) => bloc.state.trip);
+    final trip = context.select((PlanBloc bloc) => bloc.state.trip);
 
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, profileState) {

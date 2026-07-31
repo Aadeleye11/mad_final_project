@@ -10,6 +10,7 @@ import 'data/repositories/auth_repository.dart';
 import 'data/repositories/itinerary_repository.dart';
 import 'data/repositories/preferences_repository.dart';
 import 'data/repositories/profile_repository.dart';
+import 'features/discover/domain/repositories/attraction_repository.dart';
 import 'features/discover/presentation/bloc/discover_bloc.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart' as di;
@@ -64,7 +65,14 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (_) => AuthRepository()),
         RepositoryProvider.value(value: preferencesRepository),
-        RepositoryProvider(create: (_) => ItineraryRepository()),
+        RepositoryProvider(
+          // Pulled from the container so the shared SharedPreferences instance
+          // and the Discover catalogue are reused rather than rebuilt.
+          create: (_) => ItineraryRepository(
+            prefs: di.sl<SharedPreferences>(),
+            attractions: di.sl<AttractionRepository>(),
+          ),
+        ),
         RepositoryProvider(create: (_) => AttractionsRepository()),
         RepositoryProvider.value(value: profileRepository),
       ],
@@ -78,10 +86,8 @@ class MyApp extends StatelessWidget {
                 InterestsBloc(context.read<PreferencesRepository>()),
           ),
           BlocProvider(
-            create: (context) => HomeBloc(
-              context.read<AttractionsRepository>(),
-              context.read<ItineraryRepository>(),
-            ),
+            create: (context) =>
+                HomeBloc(context.read<AttractionsRepository>()),
           ),
           BlocProvider(
             create: (context) => PlanBloc(context.read<ItineraryRepository>()),

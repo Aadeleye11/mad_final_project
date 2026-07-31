@@ -5,7 +5,9 @@ import '../../../core/constants/app_colors.dart';
 import '../../../data/models/trip.dart';
 import '../../../logic/blocs/auth/auth_bloc.dart';
 import '../../../logic/blocs/home/home_bloc.dart';
+import '../../../logic/blocs/plan/plan_bloc.dart';
 import '../../widgets/spot_card.dart';
+import '../plan/plan_form_screen.dart';
 
 /// Home dashboard: greeting, trip summary, and featured spots.
 class HomeScreen extends StatefulWidget {
@@ -56,20 +58,24 @@ class _HomeScreenState extends State<HomeScreen> {
     return '${trip.name} · $range · ${trip.durationDays} days';
   }
 
-  void _comingSoon(String feature) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('$feature coming soon'),
-          behavior: SnackBarBehavior.floating,
-        ),
+  /// With no plan yet this opens the builder; otherwise the Plan tab is where
+  /// the itinerary is actually edited.
+  void _buildOrOpenPlan(Trip? trip) {
+    if (trip == null) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const PlanFormScreen()),
       );
+    } else {
+      widget.onNavigateToTab(1);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthBloc bloc) => bloc.state.user);
+    // PlanBloc owns the trip, so the dashboard can never disagree with the
+    // Plan tab about how many activities are booked.
+    final trip = context.select((PlanBloc bloc) => bloc.state.trip);
 
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
@@ -95,8 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      state.trip != null
-                          ? _tripLine(state.trip!)
+                      trip != null
+                          ? _tripLine(trip)
                           : 'Plan your Rwanda experience',
                       style: const TextStyle(
                         color: Colors.white70,
@@ -111,10 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: _TripSummaryCard(
-                    activitiesCount: state.trip?.activitiesCount ?? 0,
+                    activitiesCount: trip?.activitiesCount ?? 0,
                     onViewPlan: () => widget.onNavigateToTab(1),
                     onDiscover: () => widget.onNavigateToTab(2),
-                    onBuild: () => _comingSoon('Build a plan'),
+                    onBuild: () => _buildOrOpenPlan(trip),
                     onQrCode: () => Navigator.of(context).pushNamed('/qr'),
                   ),
                 ),
