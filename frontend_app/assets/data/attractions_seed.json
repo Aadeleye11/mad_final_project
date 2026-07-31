@@ -1,0 +1,162 @@
+[
+  {
+    "id": "volcanoes-np",
+    "name": "Volcanoes National Park",
+    "description": "Rwanda's most famous park, home to mountain gorillas and golden monkeys across the Virunga chain. Treks depart early from Kinigi headquarters.",
+    "category": "wildlife",
+    "latitude": -1.4833,
+    "longitude": 29.5333,
+    "rating": 4.8,
+    "imageUrl": "assets/images/volcanoes-np.gif",
+    "district": "Musanze",
+    "localTip": "Gorilla permits sell out months ahead — book before you fix your dates, not after.",
+    "bestDays": []
+  },
+  {
+    "id": "lake-kivu",
+    "name": "Lake Kivu",
+    "description": "One of Africa's great lakes, with beach towns at Gisenyi, Kibuye and Rusizi. Swimming is safe: there are no crocodiles or hippos.",
+    "category": "nature",
+    "latitude": -2.05,
+    "longitude": 29.25,
+    "rating": 4.7,
+    "imageUrl": "assets/images/lake-kivu.jpg",
+    "district": "Rubavu",
+    "localTip": "Kibuye is quieter than Gisenyi and the island boat trips leave from there.",
+    "bestDays": []
+  },
+  {
+    "id": "kigali-genocide-memorial",
+    "name": "Kigali Genocide Memorial",
+    "description": "The memorial at Gisozi where more than 250,000 victims are buried. Permanent exhibitions cover the 1994 genocide against the Tutsi and its aftermath.",
+    "category": "history",
+    "latitude": -1.9306,
+    "longitude": 30.0594,
+    "rating": 4.9,
+    "imageUrl": "assets/images/kigali-genocide-memorial.jpg",
+    "district": "Gasabo",
+    "localTip": "Allow a full two hours and plan nothing demanding afterwards. Entry is free; the audio guide is worth it.",
+    "bestDays": []
+  },
+  {
+    "id": "nyungwe-forest",
+    "name": "Nyungwe National Park",
+    "description": "Ancient montane rainforest with chimpanzee tracking and East Africa's only canopy walkway, suspended 50 metres above the forest floor.",
+    "category": "nature",
+    "latitude": -2.4833,
+    "longitude": 29.2,
+    "rating": 4.6,
+    "imageUrl": "",
+    "district": "Nyamasheke",
+    "localTip": "Chimp tracking starts at 5am. Stay inside the park the night before or you will not make it.",
+    "bestDays": []
+  },
+  {
+    "id": "kimironko-market",
+    "name": "Kimironko Market",
+    "description": "Kigali's largest market: produce, spices, kitenge fabric and tailors who will make a garment in a day.",
+    "category": "food",
+    "latitude": -1.9403,
+    "longitude": 30.1236,
+    "rating": 4.5,
+    "imageUrl": "assets/images/kimironko-market.png",
+    "district": "Gasabo",
+    "localTip": "Saturday morning is the market at full tilt. A Wednesday afternoon is a different, much quieter place.",
+    "bestDays": [
+      6
+    ]
+  },
+  {
+    "id": "inema-arts-center",
+    "name": "Inema Arts Center",
+    "description": "Artist-run studio and gallery in Kacyiru showing contemporary Rwandan painting and sculpture, with resident artists working on site.",
+    "category": "culture",
+    "latitude": -1.9447,
+    "longitude": 30.0919,
+    "rating": 4.7,
+    "imageUrl": "",
+    "district": "Gasabo",
+    "localTip": "Thursday evenings there is live music and the studios stay open late.",
+    "bestDays": [
+      4
+    ]
+  },
+  {
+    "id": "akagera-np",
+    "name": "Akagera National Park",
+    "description": "Rwanda's savannah park in the east, with lion, rhino, elephant and buffalo restored over the past decade. Boat safaris run on Lake Ihema.",
+    "category": "wildlife",
+    "latitude": -1.6833,
+    "longitude": 30.7333,
+    "rating": 4.6,
+    "imageUrl": "assets/images/akagera-np.jpg",
+    "district": "Kayonza",
+    "localTip": "The southern gate is a two and a half hour drive from Kigali — leave before dawn for a same-day visit.",
+    "bestDays": []
+  },
+  {
+    "id": "kings-palace-nyanza",
+    "name": "King's Palace Museum",
+    "description": "Reconstruction of the traditional royal residence at Nyanza, including the long-horned Inyambo cattle and their praise singers.",
+    "category": "history",
+    "latitude": -2.3517,
+    "longitude": 29.7386,
+    "rating": 4.4,
+    "imageUrl": "assets/images/kings-palace-nyanza.jpg",
+    "district": "Nyanza",
+    "localTip": "The Inyambo cattle ceremony happens on request — ask at the gate when you arrive, not later.",
+    "bestDays": []
+  },
+  {
+    "id": "musanze-caves",
+    "name": "Musanze Caves",
+    "description": "A two-kilometre lava tube formed by the Virunga eruptions, with bat colonies and openings to the surface.",
+    "category": "adventure",
+    "latitude": -1.5,
+    "longitude": 29.6333,
+    "rating": 4.3,
+    "imageUrl": "",
+    "district": "Musanze",
+    "localTip": "Wear closed shoes. The floor is loose volcanic rock and it stays wet year round.",
+    "bestDays": []
+  },
+  {
+    "id": "ethnographic-museum",
+    "name": "Ethnographic Museum",
+    "description": "Rwanda's richest collection of ethnographic and archaeological material, housed in Huye in a building gifted by Belgium in 1989.",
+    "category": "culture",
+    "latitude": -2.6,
+    "longitude": 29.7397,
+    "rating": 4.5,
+    "imageUrl": "assets/images/ethnographic-museum.jpg",
+    "district": "Huye",
+    "localTip": "Combine it with the National Art Gallery at Rwesero — they are twenty minutes apart.",
+    "bestDays": []
+  },
+  {
+    "id": "heaven-restaurant",
+    "name": "Heaven Restaurant",
+    "description": "Terrace restaurant in Kiyovu serving Rwandan and pan-African dishes, with a view over the city and a well-known cocktail list.",
+    "category": "food",
+    "latitude": -1.9536,
+    "longitude": 30.0606,
+    "rating": 4.6,
+    "imageUrl": "",
+    "district": "Nyarugenge",
+    "localTip": "Book a table before sunset for the view. Walk-ins after 7pm rarely get the terrace.",
+    "bestDays": []
+  },
+  {
+    "id": "mount-bisoke",
+    "name": "Mount Bisoke",
+    "description": "Day hike up a 3,711-metre volcano to a crater lake at the summit, inside Volcanoes National Park.",
+    "category": "adventure",
+    "latitude": -1.4581,
+    "longitude": 29.4906,
+    "rating": 4.5,
+    "imageUrl": "",
+    "district": "Musanze",
+    "localTip": "Six hours round trip and the descent is pure mud. Hire gaiters and a walking stick at the base.",
+    "bestDays": []
+  }
+]
