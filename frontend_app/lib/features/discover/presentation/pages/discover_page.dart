@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../bloc/discover_bloc.dart';
 import '../widgets/attraction_card.dart';
 import '../widgets/category_filter_bar.dart';
+import 'attraction_detail_page.dart';
 
 /// Discover tab: search, filter by category, browse a responsive grid.
 class DiscoverPage extends StatelessWidget {
@@ -98,7 +98,12 @@ class _Results extends StatelessWidget {
               final attraction = state.visible[index];
               return AttractionCard(
                 attraction: attraction,
-                onTap: () => context.push('/attraction/${attraction.id}'),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        AttractionDetailPage(attractionId: attraction.id),
+                  ),
+                ),
               );
             },
           );
