@@ -19,12 +19,12 @@ class SavedItinerariesScreen extends StatelessWidget {
       ),
       body: BlocBuilder<PlanBloc, PlanState>(
         builder: (context, state) {
-          if (state.status != PlanStatus.ready || state.days.isEmpty) {
+          if (!state.hasPlan || state.days.isEmpty) {
             return const Center(
               child: Padding(
                 padding: EdgeInsets.all(32),
                 child: Text(
-                  'No saved itineraries yet. Build a plan from the Home tab '
+                  'No saved itineraries yet. Create a plan from the Plan tab '
                   'to see it here.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: AppColors.textSecondary),

@@ -1,24 +1,71 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/itinerary.dart';
+import '../../features/discover/domain/entities/attraction.dart';
+import '../../features/discover/domain/repositories/attraction_repository.dart';
+import '../../logic/services/itinerary_generator.dart';
 import '../models/trip.dart';
 
+/// The plan is written to Firestore and mirrored into SharedPreferences.
+///
+/// Firestore applies writes to its local cache immediately and syncs them when
+/// the network returns, so nothing here awaits the server — a plan created on a
+/// bus with no signal is usable straight away. The mirror covers the one case
+/// Firestore's own cache can't: a cold install that has never been online.
 class ItineraryRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final SharedPreferences _prefs;
+  final AttractionRepository _attractions;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
-  String _generateShortId() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final rnd = Random();
-    return String.fromCharCodes(
-      Iterable.generate(6, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))),
-    );
+  ItineraryRepository({
+    required SharedPreferences prefs,
+    required AttractionRepository attractions,
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  }) : _prefs = prefs,
+       _attractions = attractions,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance;
+
+  static const String cacheKey = 'cached_trip';
+  static const Duration _readTimeout = Duration(seconds: 8);
+
+  CollectionReference<Map<String, dynamic>> get _trips =>
+      _firestore.collection('trips');
+
+  String? get _uid => _auth.currentUser?.uid;
+
+  Future<Trip?> getCurrentTrip() async {
+    final uid = _uid;
+    if (uid == null) return _cachedTrip();
+
+    try {
+      final snapshot = await _trips
+          .where('ownerId', isEqualTo: uid)
+          .get()
+          .timeout(_readTimeout);
+
+      if (snapshot.docs.isEmpty) return _cachedTrip();
+
+      // Sorted here rather than in the query so no composite index is needed.
+      final trips = snapshot.docs.map(Trip.fromFirestore).toList()
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      await _cache(trips.first);
+      return trips.first;
+    } catch (_) {
+      return _cachedTrip();
+    }
   }
 
-  Future<void> createTripPlan({
+  /// Builds an itinerary from the traveller's interests and saves it as the
+  /// active plan, replacing any previous one.
+  Future<Trip> createPlan({
     required String title,
     required DateTime startDate,
     required DateTime endDate,
@@ -26,59 +73,81 @@ class ItineraryRepository {
     required double budget,
     required List<String> interests,
   }) async {
-    final uid = _auth.currentUser?.uid;
-    if (uid == null) throw Exception("User not authenticated");
+    final previous = _cachedTrip();
 
-    await _firestore.collection('trips').add({
-      'ownerId': uid,
-      'title': title,
-      'startDate': Timestamp.fromDate(startDate),
-      'endDate': Timestamp.fromDate(endDate),
-      'groupSize': groupSize,
-      'budget': budget,
-      'interests': interests,
-      'status': 'draft',
-      'shareCode': _generateShortId(),
-    });
-  }
+    final trip = Trip(
+      // Client-side id, so creating a plan offline doesn't wait on the server.
+      id: _trips.doc().id,
+      ownerId: _uid ?? '',
+      title: title,
+      startDate: startDate,
+      endDate: endDate,
+      groupSize: groupSize,
+      budget: budget,
+      interests: interests,
+      status: 'active',
+      shareCode: _generateShareCode(),
+      days: ItineraryGenerator.build(
+        startDate: startDate,
+        endDate: endDate,
+        interests: interests,
+        catalogue: await _catalogue(),
+      ),
+      updatedAt: DateTime.now(),
+    );
 
-  Future<Trip?> getCurrentTrip() async {
-    final uid = _auth.currentUser?.uid;
-    if (uid == null) return null;
-
-    final snapshot = await _firestore
-        .collection('trips')
-        .where('ownerId', isEqualTo: uid)
-        .limit(1)
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      return Trip.fromFirestore(snapshot.docs.first);
+    await _cache(trip);
+    _push(_trips.doc(trip.id).set(trip.toMap()));
+    if (previous != null && previous.id != trip.id) {
+      _push(_trips.doc(previous.id).delete());
     }
-    return null;
+    return trip;
   }
 
-  Stream<QuerySnapshot> getLegs(String tripId) {
-    return _firestore
-        .collection('trips')
-        .doc(tripId)
-        .collection('legs')
-        .orderBy('order')
-        .snapshots();
+  /// Persists an edited plan. Returns the trip with its new `updatedAt`.
+  Future<Trip> saveTrip(Trip trip) async {
+    final updated = trip.copyWith(updatedAt: DateTime.now());
+    await _cache(updated);
+    _push(_trips.doc(updated.id).set(updated.toMap()));
+    return updated;
   }
 
-  Stream<QuerySnapshot> getActivities(String tripId, String legId) {
-    return _firestore
-        .collection('trips')
-        .doc(tripId)
-        .collection('legs')
-        .doc(legId)
-        .collection('activities')
-        .orderBy('time')
-        .snapshots();
+  Future<void> deletePlan(Trip trip) async {
+    await _prefs.remove(cacheKey);
+    _push(_trips.doc(trip.id).delete());
   }
 
-  Future<List<ItineraryDay>> getItinerary() async {
-    return [];
+  Future<List<Attraction>> _catalogue() async {
+    final result = await _attractions.getAttractions();
+    return result.getOrElse(() => const []);
+  }
+
+  /// Fire-and-forget: the local write has already happened, and a sync failure
+  /// must not surface as an error the traveller can't act on.
+  void _push(Future<void> write) {
+    unawaited(write.catchError((Object _) {}));
+  }
+
+  Trip? _cachedTrip() {
+    final raw = _prefs.getString(cacheKey);
+    if (raw == null) return null;
+    try {
+      return Trip.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    } catch (_) {
+      // A mirror written by an older build shouldn't break the Plan tab.
+      return null;
+    }
+  }
+
+  Future<void> _cache(Trip trip) async {
+    await _prefs.setString(cacheKey, jsonEncode(trip.toJson()));
+  }
+
+  String _generateShareCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final rnd = Random();
+    return String.fromCharCodes(
+      Iterable.generate(6, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))),
+    );
   }
 }
