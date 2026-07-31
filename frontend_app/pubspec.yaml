@@ -45,6 +45,9 @@ dependencies:
   share_plus: ^13.3.0
   gal: ^2.3.3
 
+  # Profile feature (Ayomide)
+  image_picker: ^1.1.2
+
   # Discover feature (Ayomide)
   bloc: ^9.0.0
   get_it: ^7.7.0

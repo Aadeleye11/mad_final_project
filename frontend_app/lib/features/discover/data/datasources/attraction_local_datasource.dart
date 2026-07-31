@@ -8,6 +8,7 @@ import '../models/attraction_model.dart';
 abstract class AttractionLocalDataSource {
   Future<List<AttractionModel>> getCached();
   Future<void> cache(List<AttractionModel> attractions);
+  Future<void> clear();
   bool get hasCache;
 }
 
@@ -34,5 +35,10 @@ class AttractionLocalDataSourceImpl implements AttractionLocalDataSource {
   Future<void> cache(List<AttractionModel> attractions) async {
     final encoded = jsonEncode(attractions.map((a) => a.toJson()).toList());
     await prefs.setString(cacheKey, encoded);
+  }
+
+  @override
+  Future<void> clear() async {
+    await prefs.remove(cacheKey);
   }
 }

@@ -10,6 +10,7 @@ import 'injection_container.dart' as di;
 import 'logic/blocs/auth/auth_bloc.dart';
 import 'logic/blocs/plan/plan_bloc.dart';
 import 'logic/blocs/home/home_bloc.dart';
+import 'logic/blocs/profile/profile_bloc.dart';
 import 'presentation/screens/main_shell.dart';
 import 'data/repositories/auth_repository.dart';
 import 'presentation/screens/splash_screen.dart';
@@ -17,6 +18,7 @@ import 'logic/blocs/interests/interests_bloc.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'data/repositories/itinerary_repository.dart';
 import 'presentation/screens/auth/signup_screen.dart';
+import 'data/repositories/profile_repository.dart';
 import 'data/repositories/attractions_repository.dart';
 import 'data/repositories/preferences_repository.dart';
 import 'presentation/screens/plan/qr_code_screen.dart';
@@ -37,13 +39,23 @@ Future<void> main() async {
 
   final prefs = await SharedPreferences.getInstance();
   await di.init();
-  runApp(MyApp(preferencesRepository: PreferencesRepository(prefs)));
+  runApp(
+    MyApp(
+      preferencesRepository: PreferencesRepository(prefs),
+      profileRepository: ProfileRepository(prefs),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   final PreferencesRepository preferencesRepository;
+  final ProfileRepository profileRepository;
 
-  const MyApp({super.key, required this.preferencesRepository});
+  const MyApp({
+    super.key,
+    required this.preferencesRepository,
+    required this.profileRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +65,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(value: preferencesRepository),
         RepositoryProvider(create: (_) => ItineraryRepository()),
         RepositoryProvider(create: (_) => AttractionsRepository()),
+        RepositoryProvider.value(value: profileRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -71,6 +84,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => PlanBloc(context.read<ItineraryRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => ProfileBloc(context.read<ProfileRepository>()),
           ),
           // Discover owns its own DI graph; only the BLoC is exposed here.
           BlocProvider<DiscoverBloc>(

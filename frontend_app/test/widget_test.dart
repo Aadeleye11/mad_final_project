@@ -3,13 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:frontend_app/data/repositories/preferences_repository.dart';
+import 'package:frontend_app/data/repositories/profile_repository.dart';
 import 'package:frontend_app/injection_container.dart' as di;
 import 'package:frontend_app/main.dart';
 
 Future<MyApp> buildApp({Map<String, Object> prefs = const {}}) async {
   SharedPreferences.setMockInitialValues(prefs);
   final sharedPrefs = await SharedPreferences.getInstance();
-  return MyApp(preferencesRepository: PreferencesRepository(sharedPrefs));
+  return MyApp(
+    preferencesRepository: PreferencesRepository(sharedPrefs),
+    profileRepository: ProfileRepository(sharedPrefs),
+  );
 }
 
 Future<void> pumpToLogin(WidgetTester tester, MyApp app) async {
